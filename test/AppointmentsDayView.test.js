@@ -1,21 +1,14 @@
 import React from 'react';
-import ReactDOM from 'react-dom/client';
 import { act } from 'react-dom/test-utils'
-
+import { initializeReactContainer, render } from './reactTestExtensions';
 import { Appointment, AppointmentsDayView } from '../src/AppointmentsDayView';
 
 describe("Appointment", () => {
-  let container;
   let customer;
 
   beforeEach(() => {
-    container = document.createElement("div");
-    document.body.replaceChildren(container);
+    initializeReactContainer()
   })
-
-  const render = component => 
-    act(() => ReactDOM.createRoot(container).render(component));
-  
 
   it("renders the customer first name", () => {
     customer = { firstName: "Ashley" };
@@ -31,8 +24,6 @@ describe("Appointment", () => {
 });
 
 describe("AppointmentsDayView", () => {
-  let container;
-
   const today = new Date()
   const twoAppointments = [
     {
@@ -45,12 +36,8 @@ describe("AppointmentsDayView", () => {
   ]
 
   beforeEach(() => {
-    container = document.createElement("div");
-    document.body.replaceChildren(container);
+    initializeReactContainer()
   })
-
-  const render = component => 
-    act(() => ReactDOM.createRoot(container).render(component));
 
   it("renders a div with the right id", () => {
     render(<AppointmentsDayView appointments={[]} />);
