@@ -1,10 +1,8 @@
-Array.prototype.getRandom = function () {
-  return this[Math.floor(this.length * Math.random())]
-}
+const getRandom = list => list[Math.floor(list.length * Math.random())]
 
 const today = new Date()
 
-const at = (hours) => today.setHours(hours, 0)
+const at = hours => today.setHours(hours, 0)
 
 const firstNames = ["Sebastian", "Brad", "John", "Sarah", "Leia", "Darth"]
 const lastNames = ["Vader", "Smith", "Musk", "Developer", "Something"]
@@ -13,16 +11,16 @@ const services = ["Cut", "Dry", "Wash", "Clean"]
 
 const getRandomCustomer = () => {
   return {
-    firstName: firstNames.getRandom(),
-    lasttName: lastNames.getRandom(),
+    firstName: getRandom(firstNames),
+    lasttName: getRandom(lastNames),
   }
 }
 
 const getAppointmentData = () => {
   return {
     customer: getRandomCustomer(),
-    stylist: stylists.getRandom(),
-    service: services.getRandom(),
+    stylist: getRandom(stylists),
+    service: getRandom(services),
     phoneNumner: "157 88 2323 2323",
     notes: "Lorem ipsum text",
   }
