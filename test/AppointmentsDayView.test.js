@@ -1,6 +1,6 @@
 import React from "react"
 import { initializeReactContainer, render, click, element, elements, typeOf, textOf } from "./reactTestExtensions"
-import { Appointment, AppointmentsDayView } from "../src/AppointmentsDayView"
+import { Appointment, AppointmentsDayView } from "../src/components/AppointmentsDayView"
 
 describe("Appointment", () => {
   let customer
