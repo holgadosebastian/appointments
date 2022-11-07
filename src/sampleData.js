@@ -2,14 +2,14 @@ Array.prototype.getRandom = function () {
   return this[Math.floor(this.length * Math.random())]
 }
 
-const today = new Date();
+const today = new Date()
 
-const at = hours => today.setHours(hours, 0);
+const at = (hours) => today.setHours(hours, 0)
 
-const firstNames = ['Sebastian', 'Brad', 'John', 'Sarah', 'Leia', 'Darth'];
-const lastNames = ['Vader', 'Smith', 'Musk', 'Developer', 'Something'];
-const stylists = ['Superman', 'Deborah', 'Luis', 'Miguel', 'Clara'];
-const services = ['Cut', 'Dry', 'Wash', 'Clean'];
+const firstNames = ["Sebastian", "Brad", "John", "Sarah", "Leia", "Darth"]
+const lastNames = ["Vader", "Smith", "Musk", "Developer", "Something"]
+const stylists = ["Superman", "Deborah", "Luis", "Miguel", "Clara"]
+const services = ["Cut", "Dry", "Wash", "Clean"]
 
 const getRandomCustomer = () => {
   return {
@@ -24,7 +24,7 @@ const getAppointmentData = () => {
     stylist: stylists.getRandom(),
     service: services.getRandom(),
     phoneNumner: "157 88 2323 2323",
-    notes: "Lorem ipsum text"
+    notes: "Lorem ipsum text",
   }
 }
 

@@ -1,9 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState } from "react"
 
 const appointmentTimeOfDay = startsAt => {
-  const [h, m] = new Date(startsAt)
-    .toTimeString()
-    .split(":")
+  const [h, m] = new Date(startsAt).toTimeString().split(":")
 
   return `${h}:${m}`
 }
@@ -15,7 +13,9 @@ export const Appointment = ({ startsAt, customer, stylist, service, notes }) => 
       <tbody>
         <tr>
           <td>Customer</td>
-          <td>{customer.firstName} {customer.lastName}</td>
+          <td>
+            {customer.firstName} {customer.lastName}
+          </td>
         </tr>
         <tr>
           <td>Phone Number</td>
@@ -36,17 +36,21 @@ export const Appointment = ({ startsAt, customer, stylist, service, notes }) => 
       </tbody>
     </table>
   </div>
-);
+)
 
 export const AppointmentsDayView = ({ appointments }) => {
-  const [selectedAppointment, setSelectedAppointment] = useState(0);
+  const [selectedAppointment, setSelectedAppointment] = useState(0)
 
   return (
     <div id="appointmentsDayView">
       <ol>
         {appointments.map(({ startsAt }, i) => (
           <li key={startsAt}>
-            <button type="button" onClick={() => setSelectedAppointment(i)}>
+            <button
+              type="button"
+              className={`${i === selectedAppointment ? "toggled" : ""}`}
+              onClick={() => setSelectedAppointment(i)}
+            >
               {appointmentTimeOfDay(startsAt)}
             </button>
           </li>
@@ -60,4 +64,4 @@ export const AppointmentsDayView = ({ appointments }) => {
       )}
     </div>
   )
-};
+}
