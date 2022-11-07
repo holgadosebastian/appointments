@@ -10,7 +10,7 @@ import {
   change,
   labelFor,
 } from "./reactTestExtensions"
-import { CustomerForm } from "../src/CustomerForm"
+import { CustomerForm } from "../src/components/CustomerForm"
 
 describe("CustomerForm", () => {
   const blankCustomer = { firstName: "", lastName: "", phoneNumber: "" }
