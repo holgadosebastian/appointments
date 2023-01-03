@@ -49,21 +49,23 @@ const TimeSlotTable = ({ salonOpensAt, salonClosesAt, today, availableTimeSlots,
   const timeSlots = dailyTimeSlots(salonOpensAt, salonClosesAt)
 
   return (
-    <table id="time-slots">
-      <thead>
+    <table className="w-full table-fixed" id="time-slots">
+      <thead className="bg-slate-50">
         <tr>
           <th />
           {dates.map(date => (
-            <th key={date}>{toShortDate(date)}</th>
+            <th className="font-light px-2 py-1" key={date}>
+              {toShortDate(date)}
+            </th>
           ))}
         </tr>
       </thead>
       <tbody>
-        {timeSlots.map(timeSlot => (
-          <tr key={timeSlot}>
-            <th>{toTimeValue(timeSlot)}</th>
+        {timeSlots.map((timeSlot, index) => (
+          <tr className={`hover:bg-slate-200 ${index % 2 === 1 ? "bg-slate-50" : ""}`} key={timeSlot}>
+            <th className="font-light px-2 py-1">{toTimeValue(timeSlot)}</th>
             {dates.map(date => (
-              <td key={date}>
+              <td className="px-2 py-1 text-center" key={date}>
                 <RadioButtonIfAvailable
                   availableTimeSlots={availableTimeSlots}
                   date={date}
@@ -102,7 +104,12 @@ export const AppointmentForm = ({
 
   return (
     <form onSubmit={handleSubmit}>
-      <select name="service" value={original.service} readOnly>
+      <select
+        className="rounded-md h-10 mb-2 border border-slate-100 px-4"
+        name="service"
+        value={original.service}
+        readOnly
+      >
         <option></option>
         {selectableServices.map(service => (
           <option key={service}>{service}</option>
@@ -116,7 +123,11 @@ export const AppointmentForm = ({
         checkedTimeSlot={appointment.startsAt}
         onChange={handleStartsAtChange}
       />
-      <input type="submit" value="Add" />
+      <input
+        className="bg-teal-400 hover:bg-teal-300 cursor-pointer h-10 rounded-md text-white mt-2 px-4"
+        type="submit"
+        value="Add"
+      />
     </form>
   )
 }
