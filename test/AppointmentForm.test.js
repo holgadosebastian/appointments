@@ -10,10 +10,10 @@ import {
   submitButton,
   click,
 } from "./reactTestExtensions"
+import { today } from "./builders/time"
 import { AppointmentForm } from "../src/components/AppointmentForm"
 
 describe("AppointmentForm", () => {
-  const today = new Date()
   const availableTimeSlots = [{ startsAt: today.setHours(9, 0, 0, 0) }, { startsAt: today.setHours(9, 30, 0, 0) }]
   const blankAppointment = { service: "" }
   const services = ["Cut", "Blow-dry"]
