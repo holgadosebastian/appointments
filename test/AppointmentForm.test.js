@@ -10,11 +10,11 @@ import {
   submitButton,
   click,
 } from "./reactTestExtensions"
-import { today } from "./builders/time"
+import { today, todayAt, tomorrowAt } from "./builders/time"
 import { AppointmentForm } from "../src/components/AppointmentForm"
 
 describe("AppointmentForm", () => {
-  const availableTimeSlots = [{ startsAt: today.setHours(9, 0, 0, 0) }, { startsAt: today.setHours(9, 30, 0, 0) }]
+  const availableTimeSlots = [{ startsAt: todayAt(9) }, { startsAt: todayAt(9, 30) }]
   const blankAppointment = { service: "" }
   const services = ["Cut", "Blow-dry"]
   const findOption = (selectBox, textContent) => {
@@ -112,12 +112,10 @@ describe("AppointmentForm", () => {
     })
 
     it("renders radio buttons in the correct table cell positions", () => {
-      const oneDayInMs = 24 * 60 * 60 * 1000
-      const tomorrow = new Date(today.getTime() + oneDayInMs)
       const availableTimeSlots = [
-        { startsAt: today.setHours(9, 0, 0, 0) },
-        { startsAt: today.setHours(9, 30, 0, 0) },
-        { startsAt: tomorrow.setHours(9, 30, 0, 0) },
+        { startsAt: todayAt(9) },
+        { startsAt: todayAt(9, 30) },
+        { startsAt: tomorrowAt(9, 30) },
       ]
 
       render(<AppointmentForm original={blankAppointment} availableTimeSlots={availableTimeSlots} today={today} />)
