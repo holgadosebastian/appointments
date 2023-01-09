@@ -17,6 +17,12 @@ describe("AppointmentForm", () => {
   const availableTimeSlots = [{ startsAt: todayAt(9) }, { startsAt: todayAt(9, 30) }]
   const blankAppointment = { service: "" }
   const services = ["Cut", "Blow-dry"]
+  const testProps = {
+    today,
+    selectableServices: services,
+    availableTimeSlots,
+    original: blankAppointment,
+  }
   const findOption = (selectBox, textContent) => {
     const options = Array.from(selectBox.childNodes)
     return options.find(option => option.textContent === textContent)
@@ -28,32 +34,26 @@ describe("AppointmentForm", () => {
   })
 
   it("renders a form", () => {
-    render(<AppointmentForm original={blankAppointment} availableTimeSlots={availableTimeSlots} />)
+    render(<AppointmentForm {...testProps} />)
     expect(form()).not.toBeNull()
   })
 
   describe("service field", () => {
     it("renders as a select box", () => {
-      render(<AppointmentForm original={blankAppointment} availableTimeSlots={availableTimeSlots} />)
+      render(<AppointmentForm {...testProps} />)
       expect(field("service")).not.toBeNull()
       expect(field("service").tagName).toEqual("SELECT")
     })
 
     it("has a blank value as the first value", () => {
-      render(<AppointmentForm original={blankAppointment} availableTimeSlots={availableTimeSlots} />)
+      render(<AppointmentForm {...testProps} original={blankAppointment} />)
 
       const firstOption = field("service").childNodes[0]
       expect(firstOption.value).toEqual("")
     })
 
     it("lists all salon services", () => {
-      render(
-        <AppointmentForm
-          selectableServices={services}
-          original={blankAppointment}
-          availableTimeSlots={availableTimeSlots}
-        />
-      )
+      render(<AppointmentForm {...testProps} selectableServices={services} />)
 
       expect(labelsOfAllOptions(field("service"))).toEqual(expect.arrayContaining(services))
     })
@@ -61,9 +61,7 @@ describe("AppointmentForm", () => {
     it("preselects the existing value", () => {
       const appointment = { service: "Blow-dry" }
 
-      render(
-        <AppointmentForm selectableServices={services} original={appointment} availableTimeSlots={availableTimeSlots} />
-      )
+      render(<AppointmentForm {...testProps} selectableServices={services} original={appointment} />)
       const option = findOption(field("service"), "Blow-dry")
 
       expect(option.selected).toBe(true)
@@ -80,12 +78,7 @@ describe("AppointmentForm", () => {
 
     it("renders a time slot for every half an hour between open and close times", () => {
       render(
-        <AppointmentForm
-          original={blankAppointment}
-          salonOpensAt={9}
-          salonClosesAt={11}
-          availableTimeSlots={availableTimeSlots}
-        />
+        <AppointmentForm {...testProps} salonOpensAt={9} salonClosesAt={11} availableTimeSlots={availableTimeSlots} />
       )
       const timesOfDayHeadings = elements("tbody >* th")
       expect(timesOfDayHeadings[0]).toContainText("09:00")
@@ -94,16 +87,14 @@ describe("AppointmentForm", () => {
     })
 
     it("renders an empty cell at the start of the header row", () => {
-      render(<AppointmentForm original={blankAppointment} availableTimeSlots={availableTimeSlots} />)
+      render(<AppointmentForm {...testProps} />)
       const headerRow = element("thead > tr")
       expect(headerRow.firstChild).toContainText("")
     })
 
-    it("renders a wekk of available dates", () => {
+    it("renders a week of available dates", () => {
       const specificDate = new Date(2018, 11, 1)
-      render(
-        <AppointmentForm original={blankAppointment} today={specificDate} availableTimeSlots={availableTimeSlots} />
-      )
+      render(<AppointmentForm {...testProps} today={specificDate} />)
       const dates = elements("thead >* th:not(:first-child)")
       expect(dates).toHaveLength(7)
       expect(dates[0]).toContainText("Sat 01")
@@ -118,7 +109,7 @@ describe("AppointmentForm", () => {
         { startsAt: tomorrowAt(9, 30) },
       ]
 
-      render(<AppointmentForm original={blankAppointment} availableTimeSlots={availableTimeSlots} today={today} />)
+      render(<AppointmentForm {...testProps} availableTimeSlots={availableTimeSlots} today={today} />)
       expect(cellsWithRadioButtons()).toEqual([0, 7, 8])
     })
 
@@ -144,7 +135,7 @@ describe("AppointmentForm", () => {
     })
 
     it("renders a submit button", () => {
-      render(<AppointmentForm original={blankAppointment} availableTimeSlots={availableTimeSlots} />)
+      render(<AppointmentForm {...testProps} />)
 
       expect(submitButton()).not.toBeNull()
     })
