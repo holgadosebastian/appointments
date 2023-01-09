@@ -33,7 +33,7 @@ describe("CustomerForm", () => {
     it("renders as a text box", () => {
       render(<CustomerForm original={blankCustomer} />)
       expect(field(fieldName)).toBeTruthy()
-      expect(field(fieldName).tagName).toEqual("INPUT")
+      expect(field(fieldName)).toBeElementWithTag("INPUT")
       expect(field(fieldName)).toBeInputFieldOfType("text")
     })
   }
