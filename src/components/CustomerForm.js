@@ -4,6 +4,11 @@ export const CustomerForm = ({ original, onSubmit }) => {
   const [customer, setCustomer] = useState(original)
   const handleSubmit = e => {
     e.preventDefault()
+    global.fetch("/customers", {
+      method: "POST",
+      credentials: "same-origin",
+      headers: { "Content-Type": "application/json" },
+    })
     onSubmit(customer)
   }
 
