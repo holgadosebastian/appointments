@@ -67,10 +67,11 @@ describe("CustomerForm", () => {
 
   const itSavesExistingValueWhenSubmitted = (fieldName, value) => {
     it("saves existing value when submitted", () => {
-      expect.hasAssertions()
+      let submitArg
       const customer = { [fieldName]: value }
-      render(<CustomerForm original={customer} onSubmit={props => expect(props[fieldName]).toEqual(value)} />)
+      render(<CustomerForm original={customer} onSubmit={submittedCustomer => (submitArg = submittedCustomer)} />)
       click(submitButton())
+      expect(submitArg).toEqual(customer)
     })
   }
 
