@@ -80,7 +80,7 @@ describe("CustomerForm", () => {
       render(<CustomerForm original={customer} onSubmit={submitSpy.fn} />)
       click(submitButton())
 
-      expect(submitSpy.recievedArguments()).toBeDefined()
+      expect(submitSpy).toBeCalledWith(customer)
       expect(submitSpy.recievedArgument(0)).toEqual(customer)
     })
   }
