@@ -14,6 +14,14 @@ import { CustomerForm } from "../src/components/CustomerForm"
 
 describe("CustomerForm", () => {
   const blankCustomer = { firstName: "", lastName: "", phoneNumber: "" }
+  const spy = () => {
+    let recievedArguments
+    return {
+      fn: (...args) => (recievedArguments = args),
+      recievedArguments: () => recievedArguments,
+      recievedArgument: n => recievedArguments[n],
+    }
+  }
 
   beforeEach(() => {
     initializeReactContainer()
@@ -67,11 +75,13 @@ describe("CustomerForm", () => {
 
   const itSavesExistingValueWhenSubmitted = (fieldName, value) => {
     it("saves existing value when submitted", () => {
-      let submitArg
+      const submitSpy = spy()
       const customer = { [fieldName]: value }
-      render(<CustomerForm original={customer} onSubmit={submittedCustomer => (submitArg = submittedCustomer)} />)
+      render(<CustomerForm original={customer} onSubmit={submitSpy.fn} />)
       click(submitButton())
-      expect(submitArg).toEqual(customer)
+
+      expect(submitSpy.recievedArguments()).toBeDefined()
+      expect(submitSpy.recievedArgument(0)).toEqual(customer)
     })
   }
 
