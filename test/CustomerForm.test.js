@@ -142,7 +142,7 @@ describe("CustomerForm", () => {
   })
 
   it("prevents the default action when submitting the form", () => {
-    render(<CustomerForm original={blankCustomer} onSubmit={() => {}} />)
+    render(<CustomerForm original={blankCustomer} />)
 
     const event = submit(form())
 
@@ -150,13 +150,13 @@ describe("CustomerForm", () => {
   })
 
   it("sends request to POST /customers when submitting the form", () => {
-    render(<CustomerForm original={blankCustomer} onSubmit={() => {}} />)
+    render(<CustomerForm original={blankCustomer} />)
     click(submitButton())
     expect(fetchSpy).toBeCalledWith("/customers", expect.objectContaining({ method: "POST" }))
   })
 
   it("calls fetch with the right configuration", () => {
-    render(<CustomerForm original={blankCustomer} onSubmit={() => {}} />)
+    render(<CustomerForm original={blankCustomer} />)
     click(submitButton())
     expect(fetchSpy).toBeCalledWith(
       expect.anything(),
