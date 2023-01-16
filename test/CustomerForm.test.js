@@ -89,7 +89,12 @@ describe("CustomerForm", () => {
       click(submitButton())
 
       expect(submitSpy).toBeCalledWith(customer)
-      expect(submitSpy.recievedArgument(0)).toEqual(customer)
+      expect(fetchSpy).toBeCalledWith(
+        expect.anything(),
+        expect.objectContaining({
+          body: JSON.stringify(customer),
+        })
+      )
     })
   }
 
