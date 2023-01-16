@@ -184,32 +184,35 @@ describe("CustomerForm", () => {
     expect(saveSpy).toBeCalledWith(customer)
   })
 
-  it("does not notify onSave if the POST request returns an error", async () => {
-    fetchSpy.stubReturnValue(fetchResponseError())
-    const saveSpy = spy()
-
-    render(<CustomerForm original={blankCustomer} onSave={saveSpy.fn} />)
-    await clickAndWait(submitButton())
-
-    expect(saveSpy).not.toBeCalledWith()
-  })
-
   it("renders an alert space", () => {
     render(<CustomerForm original={blankCustomer} />)
     expect(element("[role=alert]")).not.toBeNull()
   })
 
-  it("renders error message when fetch call fails", async () => {
-    fetchSpy.stubReturnValue(fetchResponseError())
-
-    render(<CustomerForm original={blankCustomer} />)
-    await clickAndWait(submitButton())
-
-    expect(element("[role=alert]")).toContainText("error occurred")
-  })
-
   it("initially has no text in the alert space", async () => {
     render(<CustomerForm original={blankCustomer} />)
     expect(element("[role=alert]")).not.toContainText("error occurred")
+  })
+
+  describe("when POST request returns an error", () => {
+    beforeEach(() => {
+      fetchSpy.stubReturnValue(fetchResponseError())
+    })
+
+    it("does not notify onSave ", async () => {
+      const saveSpy = spy()
+
+      render(<CustomerForm original={blankCustomer} onSave={saveSpy.fn} />)
+      await clickAndWait(submitButton())
+
+      expect(saveSpy).not.toBeCalledWith()
+    })
+
+    it("renders an error message", async () => {
+      render(<CustomerForm original={blankCustomer} />)
+      await clickAndWait(submitButton())
+
+      expect(element("[role=alert]")).toContainText("error occurred")
+    })
   })
 })
