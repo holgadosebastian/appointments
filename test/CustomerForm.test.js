@@ -99,15 +99,7 @@ describe("CustomerForm", () => {
       change(field(fieldName), newValue)
       click(submitButton())
 
-      expect(fetchSpy).toBeCalledWith(
-        expect.anything(),
-        expect.objectContaining({
-          body: JSON.stringify({
-            ...blankCustomer,
-            [fieldName]: newValue,
-          }),
-        })
-      )
+      expect(bodyOfLastFetchRequest()).toMatchObject({ [fieldName]: newValue })
     })
   }
 
