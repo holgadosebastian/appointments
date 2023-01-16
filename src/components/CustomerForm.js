@@ -1,20 +1,26 @@
 import React, { useState } from "react"
 
-const Error = () => <p role="alert" />
+const Error = ({ hasError }) => <p role="alert">{hasError ? "An error occurred during save." : ""}</p>
 
 export const CustomerForm = ({ original, onSave }) => {
   const [customer, setCustomer] = useState(original)
+  const [error, setError] = useState(false)
+
   const handleSubmit = async event => {
     event.preventDefault()
+
     const result = await global.fetch("/customers", {
       method: "POST",
       credentials: "same-origin",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(customer),
     })
+
     if (result.ok) {
       const customerWithId = await result.json()
       onSave(customerWithId)
+    } else {
+      setError(true)
     }
   }
 
@@ -27,7 +33,7 @@ export const CustomerForm = ({ original, onSave }) => {
 
   return (
     <form onSubmit={handleSubmit}>
-      <Error />
+      <Error hasError={error} />
 
       <label htmlFor="firstName">First name</label>
       <input type="text" name="firstName" id="firstName" value={customer.firstName} onChange={handleChange} />
