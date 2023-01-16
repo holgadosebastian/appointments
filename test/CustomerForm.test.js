@@ -104,6 +104,16 @@ describe("CustomerForm", () => {
       render(<CustomerForm original={blankCustomer} onSubmit={props => expect(props[fieldName]).toEqual(newValue)} />)
       change(field(fieldName), newValue)
       click(submitButton())
+
+      expect(fetchSpy).toBeCalledWith(
+        expect.anything(),
+        expect.objectContaining({
+          body: JSON.stringify({
+            ...blankCustomer,
+            [fieldName]: newValue,
+          }),
+        })
+      )
     })
   }
 

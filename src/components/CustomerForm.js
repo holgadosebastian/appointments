@@ -8,7 +8,7 @@ export const CustomerForm = ({ original, onSubmit }) => {
       method: "POST",
       credentials: "same-origin",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(original),
+      body: JSON.stringify(customer),
     })
     onSubmit(customer)
   }
