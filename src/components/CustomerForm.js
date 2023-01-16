@@ -1,5 +1,7 @@
 import React, { useState } from "react"
 
+const Error = () => <p role="alert" />
+
 export const CustomerForm = ({ original, onSave }) => {
   const [customer, setCustomer] = useState(original)
   const handleSubmit = async event => {
@@ -25,6 +27,8 @@ export const CustomerForm = ({ original, onSave }) => {
 
   return (
     <form onSubmit={handleSubmit}>
+      <Error />
+
       <label htmlFor="firstName">First name</label>
       <input type="text" name="firstName" id="firstName" value={customer.firstName} onChange={handleChange} />
 

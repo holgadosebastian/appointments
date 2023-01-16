@@ -2,9 +2,9 @@ import React from "react"
 import {
   initializeReactContainer,
   render,
+  element,
   form,
   field,
-  submit,
   submitButton,
   change,
   labelFor,
@@ -192,5 +192,10 @@ describe("CustomerForm", () => {
     await clickAndWait(submitButton())
 
     expect(saveSpy).not.toBeCalledWith()
+  })
+
+  it("renders an alert space", () => {
+    render(<CustomerForm original={blankCustomer} />)
+    expect(element("[role=alert]")).not.toBeNull()
   })
 })
