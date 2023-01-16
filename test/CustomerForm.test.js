@@ -11,24 +11,12 @@ import {
   clickAndWait,
   submitAndWait,
 } from "./reactTestExtensions"
+import { bodyOfLastFetchRequest } from "./spyHelpers"
+import { fetchResponseOk, fetchResponseError } from "./builders/fetch"
 import { CustomerForm } from "../src/components/CustomerForm"
 
 describe("CustomerForm", () => {
   const blankCustomer = { firstName: "", lastName: "", phoneNumber: "" }
-
-  const bodyOfLastFetchRequest = () => {
-    const allCalls = global.fetch.mock.calls
-    const lastCall = allCalls[allCalls.length - 1]
-    return JSON.parse(lastCall[1].body)
-  }
-
-  const fetchResponseOk = body =>
-    Promise.resolve({
-      ok: true,
-      json: () => Promise.resolve(body),
-    })
-
-  const fetchResponseError = () => Promise.resolve({ ok: false })
 
   beforeEach(() => {
     initializeReactContainer()
