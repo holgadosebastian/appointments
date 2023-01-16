@@ -1,6 +1,6 @@
 import React, { useState } from "react"
 
-export const CustomerForm = ({ original, onSubmit }) => {
+export const CustomerForm = ({ original }) => {
   const [customer, setCustomer] = useState(original)
   const handleSubmit = e => {
     e.preventDefault()
@@ -10,7 +10,6 @@ export const CustomerForm = ({ original, onSubmit }) => {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(customer),
     })
-    onSubmit(customer)
   }
 
   const handleChange = ({ target }) => {

@@ -83,12 +83,10 @@ describe("CustomerForm", () => {
 
   const itSavesExistingValueWhenSubmitted = (fieldName, value) => {
     it("saves existing value when submitted", () => {
-      const submitSpy = spy()
       const customer = { [fieldName]: value }
-      render(<CustomerForm original={customer} onSubmit={submitSpy.fn} />)
+      render(<CustomerForm original={customer} />)
       click(submitButton())
 
-      expect(submitSpy).toBeCalledWith(customer)
       expect(fetchSpy).toBeCalledWith(
         expect.anything(),
         expect.objectContaining({
