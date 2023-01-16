@@ -39,6 +39,8 @@ describe("CustomerForm", () => {
       json: () => Promise.resolve(body),
     })
 
+  const fetchResponseError = () => Promise.resolve({ ok: false })
+
   beforeEach(() => {
     initializeReactContainer()
     fetchSpy = spy()
@@ -180,5 +182,15 @@ describe("CustomerForm", () => {
     await clickAndWait(submitButton())
 
     expect(saveSpy).toBeCalledWith(customer)
+  })
+
+  it("does not notify onSave if the POST request returns an error", async () => {
+    fetchSpy.stubReturnValue(fetchResponseError())
+    const saveSpy = spy()
+
+    render(<CustomerForm original={blankCustomer} onSave={saveSpy.fn} />)
+    await clickAndWait(submitButton())
+
+    expect(saveSpy).not.toBeCalledWith()
   })
 })
