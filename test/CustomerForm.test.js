@@ -15,13 +15,18 @@ import { CustomerForm } from "../src/components/CustomerForm"
 describe("CustomerForm", () => {
   const originalFetch = global.fetch
   let fetchSpy
+  let returnValue
   const blankCustomer = { firstName: "", lastName: "", phoneNumber: "" }
   const spy = () => {
     let recievedArguments
     return {
-      fn: (...args) => (recievedArguments = args),
+      fn: (...args) => {
+        recievedArguments = args
+        return returnValue
+      },
       recievedArguments: () => recievedArguments,
       recievedArgument: n => recievedArguments[n],
+      stubReturnValue: value => (returnValue = value),
     }
   }
 
