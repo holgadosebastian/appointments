@@ -55,3 +55,7 @@ export const change = (target, value) => {
 }
 
 export const submitButton = () => element("input[type=submit]")
+
+export const clickAndWait = async element => act(async () => click(element))
+
+export const submitAndWait = async formElement => act(async () => submit(formElement))
