@@ -14,24 +14,13 @@ import {
 import { CustomerForm } from "../src/components/CustomerForm"
 
 describe("CustomerForm", () => {
-  const originalFetch = global.fetch
-  let fetchSpy
-  let returnValue
   const blankCustomer = { firstName: "", lastName: "", phoneNumber: "" }
-  const spy = () => {
-    let recievedArguments
-    return {
-      fn: (...args) => {
-        recievedArguments = args
-        return returnValue
-      },
-      recievedArguments: () => recievedArguments,
-      recievedArgument: n => recievedArguments[n],
-      stubReturnValue: value => (returnValue = value),
-    }
-  }
 
-  const bodyOfLastFetchRequest = () => JSON.parse(fetchSpy.recievedArgument(1).body)
+  const bodyOfLastFetchRequest = () => {
+    const allCalls = global.fetch.mock.calls
+    const lastCall = allCalls[allCalls.length - 1]
+    return JSON.parse(lastCall[1].body)
+  }
 
   const fetchResponseOk = body =>
     Promise.resolve({
@@ -43,13 +32,7 @@ describe("CustomerForm", () => {
 
   beforeEach(() => {
     initializeReactContainer()
-    fetchSpy = spy()
-    global.fetch = fetchSpy.fn
-    fetchSpy.stubReturnValue(fetchResponseOk({}))
-  })
-
-  afterEach(() => {
-    global.fetch = originalFetch
+    jest.spyOn(global, "fetch").mockResolvedValue(fetchResponseOk({}))
   })
 
   it("renders a form", () => {
@@ -156,13 +139,13 @@ describe("CustomerForm", () => {
   it("sends request to POST /customers when submitting the form", async () => {
     render(<CustomerForm original={blankCustomer} onSave={() => {}} />)
     clickAndWait(submitButton())
-    expect(fetchSpy).toBeCalledWith("/customers", expect.objectContaining({ method: "POST" }))
+    expect(global.fetch).toBeCalledWith("/customers", expect.objectContaining({ method: "POST" }))
   })
 
   it("calls fetch with the right configuration", async () => {
     render(<CustomerForm original={blankCustomer} onSave={() => {}} />)
     clickAndWait(submitButton())
-    expect(fetchSpy).toBeCalledWith(
+    expect(global.fetch).toBeCalledWith(
       expect.anything(),
       expect.objectContaining({
         credentials: "same-origin",
@@ -175,10 +158,10 @@ describe("CustomerForm", () => {
 
   it("notifies onSave when form is submitted", async () => {
     const customer = { id: 123 }
-    fetchSpy.stubReturnValue(fetchResponseOk(customer))
-    const saveSpy = spy()
+    global.fetch.mockResolvedValue(fetchResponseOk(customer))
+    const saveSpy = jest.fn()
 
-    render(<CustomerForm original={customer} onSave={saveSpy.fn} />)
+    render(<CustomerForm original={customer} onSave={saveSpy} />)
     await clickAndWait(submitButton())
 
     expect(saveSpy).toBeCalledWith(customer)
@@ -196,16 +179,16 @@ describe("CustomerForm", () => {
 
   describe("when POST request returns an error", () => {
     beforeEach(() => {
-      fetchSpy.stubReturnValue(fetchResponseError())
+      global.fetch.mockResolvedValue(fetchResponseError())
     })
 
     it("does not notify onSave ", async () => {
-      const saveSpy = spy()
+      const saveSpy = jest.fn()
 
-      render(<CustomerForm original={blankCustomer} onSave={saveSpy.fn} />)
+      render(<CustomerForm original={blankCustomer} onSave={saveSpy} />)
       await clickAndWait(submitButton())
 
-      expect(saveSpy).not.toBeCalledWith()
+      expect(saveSpy).not.toBeCalled()
     })
 
     it("renders an error message", async () => {
