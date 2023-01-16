@@ -25,6 +25,8 @@ describe("CustomerForm", () => {
     }
   }
 
+  const bodyOfLastFetchRequest = () => JSON.parse(fetchSpy.recievedArgument(1).body)
+
   beforeEach(() => {
     initializeReactContainer()
     fetchSpy = spy()
@@ -87,12 +89,7 @@ describe("CustomerForm", () => {
       render(<CustomerForm original={customer} />)
       click(submitButton())
 
-      expect(fetchSpy).toBeCalledWith(
-        expect.anything(),
-        expect.objectContaining({
-          body: JSON.stringify(customer),
-        })
-      )
+      expect(bodyOfLastFetchRequest()).toMatchObject(customer)
     })
   }
 
