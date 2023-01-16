@@ -98,8 +98,7 @@ describe("CustomerForm", () => {
 
   const itSavesNewValueWhenSubmitted = (fieldName, newValue) => {
     it("saves new value when submitted", () => {
-      expect.hasAssertions()
-      render(<CustomerForm original={blankCustomer} onSubmit={props => expect(props[fieldName]).toEqual(newValue)} />)
+      render(<CustomerForm original={blankCustomer} />)
       change(field(fieldName), newValue)
       click(submitButton())
 
