@@ -59,3 +59,5 @@ export const submitButton = () => element("input[type=submit]")
 export const clickAndWait = async element => act(async () => click(element))
 
 export const submitAndWait = async formElement => act(async () => submit(formElement))
+
+export const renderAndWait = component => act(async () => ReactDOM.createRoot(container).render(component))
