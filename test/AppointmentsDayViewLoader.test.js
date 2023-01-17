@@ -17,4 +17,10 @@ describe("AppointmentsDayViewLoader", () => {
 
     expect(element("#AppointmentsDayView")).not.toBeNull()
   })
+
+  it("initially passes empty array of appointments to AppointmentsDayView", () => {
+    render(<AppointmentsDayViewLoader />)
+
+    expect(AppointmentsDayView).toBeCalledWith({ appointments: [] }, expect.anything())
+  })
 })
