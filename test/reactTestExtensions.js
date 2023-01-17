@@ -2,13 +2,16 @@ import ReactDOM from "react-dom/client"
 import { act } from "react-dom/test-utils"
 
 export let container
+let reactRoot
 
 export const initializeReactContainer = () => {
   container = document.createElement("div")
   document.body.replaceChildren(container)
+
+  reactRoot = ReactDOM.createRoot(container)
 }
 
-export const render = component => act(() => ReactDOM.createRoot(container).render(component))
+export const render = component => act(() => reactRoot.render(component))
 
 export const click = element => act(() => element.click())
 
@@ -60,4 +63,4 @@ export const clickAndWait = async element => act(async () => click(element))
 
 export const submitAndWait = async formElement => act(async () => submit(formElement))
 
-export const renderAndWait = component => act(async () => ReactDOM.createRoot(container).render(component))
+export const renderAndWait = component => act(async () => reactRoot.render(component))

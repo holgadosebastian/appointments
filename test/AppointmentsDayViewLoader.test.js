@@ -1,6 +1,6 @@
 import React from "react"
 import { initializeReactContainer, renderAndWait, element } from "./reactTestExtensions"
-import { todayAt } from "./builders/time"
+import { today, todayAt, tomorrow, tomorrowAt } from "./builders/time"
 import { fetchResponseOk } from "./builders/fetch"
 import { AppointmentsDayViewLoader } from "../src/components/AppointmentsDayViewLoader"
 import { AppointmentsDayView } from "../src/components/AppointmentsDayView"
@@ -46,5 +46,15 @@ describe("AppointmentsDayViewLoader", () => {
     await renderAndWait(<AppointmentsDayViewLoader />)
 
     expect(AppointmentsDayView).toHaveBeenLastCalledWith({ appointments }, expect.anything())
+  })
+
+  it("re-renders appointment when today prop changes", async () => {
+    const from = tomorrowAt(0)
+    const to = tomorrowAt(23, 59, 59, 999)
+
+    await renderAndWait(<AppointmentsDayViewLoader today={today} />)
+    await renderAndWait(<AppointmentsDayViewLoader today={tomorrow} />)
+
+    expect(global.fetch).toHaveBeenLastCalledWith(`/appointments/${from}-${to}`, expect.anything())
   })
 })
