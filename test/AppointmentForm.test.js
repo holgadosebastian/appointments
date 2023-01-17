@@ -8,7 +8,7 @@ import {
   elements,
   labelsOfAllOptions,
   submitButton,
-  click,
+  clickAndWait,
 } from "./reactTestExtensions"
 import { today, todayAt, tomorrowAt } from "./builders/time"
 import { AppointmentForm } from "../src/components/AppointmentForm"
@@ -140,37 +140,40 @@ describe("AppointmentForm", () => {
       expect(submitButton()).not.toBeNull()
     })
 
-    it("saves existing value when submitted", () => {
-      expect.hasAssertions()
+    it("saves existing value when submitted", async () => {
       const appointment = { startsAt: availableTimeSlots[1].startsAt }
+      const saveSpy = jest.fn()
 
       render(
         <AppointmentForm
           original={appointment}
           availableTimeSlots={availableTimeSlots}
           today={today}
-          onSubmit={({ startsAt }) => expect(startsAt).toEqual(availableTimeSlots[1].startsAt)}
+          onSubmit={saveSpy}
         />
       )
 
-      click(submitButton())
+      await clickAndWait(submitButton())
+      expect(saveSpy).toBeCalledWith(appointment)
     })
 
-    it("saves a new value when submitted", () => {
-      expect.hasAssertions()
+    it("saves a new value when submitted", async () => {
       const appointment = { startsAt: availableTimeSlots[0].startsAt }
+      const saveSpy = jest.fn()
 
       render(
         <AppointmentForm
           original={appointment}
           availableTimeSlots={availableTimeSlots}
           today={today}
-          onSubmit={({ startsAt }) => expect(startsAt).toEqual(availableTimeSlots[1].startsAt)}
+          onSubmit={saveSpy}
         />
       )
 
-      click(startsAtField(1))
-      click(submitButton())
+      await clickAndWait(startsAtField(1))
+      await clickAndWait(submitButton())
+
+      expect(saveSpy).toBeCalledWith(availableTimeSlots[1])
     })
   })
 })
