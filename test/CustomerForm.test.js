@@ -185,5 +185,15 @@ describe("CustomerForm", () => {
 
       expect(element("[role=alert]")).toContainText("error occurred")
     })
+
+    it("clears error message after successful submit", async () => {
+      render(<CustomerForm original={blankCustomer} onSave={() => {}} />)
+      await clickAndWait(submitButton())
+
+      global.fetch.mockResolvedValue(fetchResponseOk())
+      await clickAndWait(submitButton())
+
+      expect(element("[role=alert]")).not.toContainText("error occurred")
+    })
   })
 })

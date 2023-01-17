@@ -9,6 +9,8 @@ export const CustomerForm = ({ original, onSave }) => {
   const handleSubmit = async event => {
     event.preventDefault()
 
+    setError(false)
+
     const result = await global.fetch("/customers", {
       method: "POST",
       credentials: "same-origin",
