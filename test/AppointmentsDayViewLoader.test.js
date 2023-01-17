@@ -1,6 +1,6 @@
 import React from "react"
 import { initializeReactContainer, renderAndWait, element } from "./reactTestExtensions"
-import { today, todayAt } from "./builders/time"
+import { todayAt } from "./builders/time"
 import { fetchResponseOk } from "./builders/fetch"
 import { AppointmentsDayViewLoader } from "../src/components/AppointmentsDayViewLoader"
 import { AppointmentsDayView } from "../src/components/AppointmentsDayView"
@@ -33,12 +33,18 @@ describe("AppointmentsDayViewLoader", () => {
     const from = todayAt(0)
     const to = todayAt(23, 59, 59, 999)
 
-    await renderAndWait(<AppointmentsDayViewLoader today={today} />)
+    await renderAndWait(<AppointmentsDayViewLoader />)
 
     expect(global.fetch).toBeCalledWith(`/appointments/${from}-${to}`, {
       method: "GET",
       credentials: "same-origin",
       headers: { "Content-Type": "application/json" },
     })
+  })
+
+  it("passes fetched appointments to AppointmentsDayView once they have loaded", async () => {
+    await renderAndWait(<AppointmentsDayViewLoader />)
+
+    expect(AppointmentsDayView).toHaveBeenLastCalledWith({ appointments }, expect.anything())
   })
 })
