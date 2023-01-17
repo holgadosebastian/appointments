@@ -33,6 +33,8 @@ const mergeDateAndTime = (date, timeSlot) => {
   return new Date(date).setHours(time.getHours(), time.getMinutes(), time.getSeconds(), time.getMilliseconds())
 }
 
+const Error = ({ hasError }) => <p role="error">{hasError ? "An error ocurred" : ""}</p>
+
 const RadioButtonIfAvailable = ({ availableTimeSlots, date, timeSlot, checkedTimeSlot, onChange }) => {
   const startsAt = mergeDateAndTime(date, timeSlot)
 
@@ -89,17 +91,30 @@ export const AppointmentForm = ({
   salonClosesAt,
   today,
   availableTimeSlots,
-  onSubmit,
+  onSave,
 }) => {
   const [appointment, setAppointment] = useState(original)
+  const [error, setError] = useState(false)
   const handleStartsAtChange = useCallback(
     ({ target: { value } }) => setAppointment(appointment => ({ ...appointment, startsAt: parseInt(value) })),
     []
   )
 
-  const handleSubmit = event => {
+  const handleSubmit = async event => {
     event.preventDefault()
-    onSubmit(appointment)
+
+    const result = await global.fetch("/customers", {
+      method: "POST",
+      credentials: "same-origin",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(appointment),
+    })
+
+    if (result.ok) {
+      onSave(appointment)
+    } else {
+      setError(true)
+    }
   }
 
   return (
@@ -123,6 +138,8 @@ export const AppointmentForm = ({
         checkedTimeSlot={appointment.startsAt}
         onChange={handleStartsAtChange}
       />
+
+      <Error hasError={error} />
       <input
         className="bg-teal-400 hover:bg-teal-300 cursor-pointer h-10 rounded-md text-white mt-2 px-4"
         type="submit"

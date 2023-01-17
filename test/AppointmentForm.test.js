@@ -11,6 +11,8 @@ import {
   clickAndWait,
 } from "./reactTestExtensions"
 import { today, todayAt, tomorrowAt } from "./builders/time"
+import { fetchResponseOk, fetchResponseError } from "./builders/fetch"
+import { bodyOfLastFetchRequest } from "./spyHelpers"
 import { AppointmentForm } from "../src/components/AppointmentForm"
 
 describe("AppointmentForm", () => {
@@ -31,6 +33,7 @@ describe("AppointmentForm", () => {
 
   beforeEach(() => {
     initializeReactContainer()
+    jest.spyOn(global, "fetch").mockResolvedValue(fetchResponseOk({}))
   })
 
   it("renders a form", () => {
@@ -149,12 +152,13 @@ describe("AppointmentForm", () => {
           original={appointment}
           availableTimeSlots={availableTimeSlots}
           today={today}
-          onSubmit={saveSpy}
+          onSave={saveSpy}
         />
       )
 
       await clickAndWait(submitButton())
-      expect(saveSpy).toBeCalledWith(appointment)
+      expect(saveSpy).toBeCalled()
+      expect(bodyOfLastFetchRequest()).toMatchObject(appointment)
     })
 
     it("saves a new value when submitted", async () => {
@@ -166,7 +170,7 @@ describe("AppointmentForm", () => {
           original={appointment}
           availableTimeSlots={availableTimeSlots}
           today={today}
-          onSubmit={saveSpy}
+          onSave={saveSpy}
         />
       )
 
@@ -174,6 +178,39 @@ describe("AppointmentForm", () => {
       await clickAndWait(submitButton())
 
       expect(saveSpy).toBeCalledWith(availableTimeSlots[1])
+      expect(bodyOfLastFetchRequest()).toMatchObject(availableTimeSlots[1])
+    })
+
+    describe("when POST returns an error", () => {
+      beforeEach(() => {
+        global.fetch.mockResolvedValue(fetchResponseError())
+      })
+
+      it("does not save", async () => {
+        const appointment = { startsAt: availableTimeSlots[1].startsAt }
+        const saveSpy = jest.fn()
+
+        render(
+          <AppointmentForm
+            original={appointment}
+            availableTimeSlots={availableTimeSlots}
+            today={today}
+            onSave={saveSpy}
+          />
+        )
+
+        await clickAndWait(submitButton())
+        expect(saveSpy).not.toBeCalled()
+      })
+
+      it("displays an error message", async () => {
+        const appointment = { startsAt: availableTimeSlots[0].startsAt }
+
+        render(<AppointmentForm original={appointment} availableTimeSlots={availableTimeSlots} today={today} />)
+
+        await clickAndWait(submitButton())
+        expect(element("[role=error]")).toContainText("error ocurred")
+      })
     })
   })
 })
