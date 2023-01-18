@@ -91,4 +91,20 @@ describe("App", () => {
       })
     )
   })
+
+  it("passes the customer to the AppointmentForm", async () => {
+    const customer = { id: 123 }
+
+    render(<App />)
+    beginAddingCustomerAndAppointment()
+    saveCustomer(customer)
+
+    expect(AppointmentFormLoader).toBeRenderedWithProps(
+      expect.objectContaining({
+        original: expect.objectContaining({
+          customer: customer.id,
+        }),
+      })
+    )
+  })
 })
