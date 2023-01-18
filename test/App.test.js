@@ -3,6 +3,7 @@ import { initializeReactContainer, render, element, click } from "./reactTestExt
 import { App } from "../src/App"
 import { AppointmentsDayViewLoader } from "../src/components/AppointmentsDayViewLoader"
 import { CustomerForm } from "../src/components/CustomerForm"
+import { blankCustomer } from "./builders/customer"
 
 jest.mock("../src/components/AppointmentsDayViewLoader", () => ({
   AppointmentsDayViewLoader: jest.fn(() => <div id="AppointmentsDayViewLoader" />),
@@ -41,6 +42,16 @@ describe("App", () => {
   it("displays the CustomerForm when button is clicked", () => {
     render(<App />)
     beginAddingCustomerAndAppointment()
-    expect(CustomerForm).toBeRenderedWithProps({})
+    expect(CustomerForm).toBeRenderedWithProps(expect.anything())
+  })
+
+  it("passes a blank original customer object to CustomerForm", async () => {
+    render(<App />)
+    beginAddingCustomerAndAppointment()
+    expect(CustomerForm).toBeRenderedWithProps(
+      expect.objectContaining({
+        original: blankCustomer,
+      })
+    )
   })
 })

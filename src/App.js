@@ -1,6 +1,7 @@
 import React, { useState, useCallback } from "react"
 import { AppointmentsDayViewLoader } from "./components/AppointmentsDayViewLoader"
 import { CustomerForm } from "./components/CustomerForm"
+import { blankCustomer } from "../test/builders/customer"
 
 export const App = () => {
   const [view, setView] = useState("dayView")
@@ -15,7 +16,7 @@ export const App = () => {
           </button>
         </li>
       </menu>
-      {view === "addCustomer" ? <CustomerForm /> : null}
+      {view === "addCustomer" ? <CustomerForm original={blankCustomer} /> : null}
       <AppointmentsDayViewLoader />
     </>
   )
