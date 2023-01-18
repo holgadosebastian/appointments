@@ -1,5 +1,5 @@
 import ReactDOM from "react-dom/client"
-import { act } from "react-dom/test-utils"
+import { act, mockComponent } from "react-dom/test-utils"
 
 export let container
 let reactRoot
@@ -64,3 +64,10 @@ export const clickAndWait = async element => act(async () => click(element))
 export const submitAndWait = async formElement => act(async () => submit(formElement))
 
 export const renderAndWait = component => act(async () => reactRoot.render(component))
+
+export const propsOf = mockComponent => {
+  const lastCall = mockComponent.mock.calls[mockComponent.mock.calls.length - 1]
+
+  console.log("lastCall", lastCall)
+  return lastCall[0]
+}
