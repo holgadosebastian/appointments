@@ -9,6 +9,7 @@ export const App = () => {
   const [view, setView] = useState("dayView")
   const [customer, setCustomer] = useState()
 
+  const transitionToDayView = useCallback(() => setView("dayView"), [])
   const transitionToAddCustomer = useCallback(() => setView("addCustomer"), [])
   const transitionToAddAppointment = useCallback(customer => {
     setCustomer(customer)
@@ -19,7 +20,9 @@ export const App = () => {
     case "addCustomer":
       return <CustomerForm original={blankCustomer} onSave={transitionToAddAppointment} />
     case "addAppointment":
-      return <AppointmentFormLoader original={{ ...blankAppointment, customer: customer.id }} />
+      return (
+        <AppointmentFormLoader original={{ ...blankAppointment, customer: customer.id }} onSave={transitionToDayView} />
+      )
     default:
       return (
         <>

@@ -24,6 +24,7 @@ describe("App", () => {
   const beginAddingCustomerAndAppointment = () => click(element("menu > li > button:first-of-type"))
   const exampleCustomer = { id: "123" }
   const saveCustomer = (customer = exampleCustomer) => act(() => propsOf(CustomerForm).onSave(customer))
+  const saveAppointment = () => act(() => propsOf(AppointmentFormLoader).onSave())
 
   beforeEach(() => {
     initializeReactContainer()
@@ -106,5 +107,14 @@ describe("App", () => {
         }),
       })
     )
+  })
+
+  it("renders AppointmentDayViewLoader after AppointmentForm is submitted", async () => {
+    render(<App />)
+    beginAddingCustomerAndAppointment()
+    saveCustomer()
+    saveAppointment()
+
+    expect(element("#AppointmentsDayViewLoader")).not.toBeNull()
   })
 })
