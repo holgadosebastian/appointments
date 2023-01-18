@@ -7,7 +7,9 @@ export const App = () => {
   const [view, setView] = useState("dayView")
   const transitionToAddCustomer = useCallback(() => setView("addCustomer"), [])
 
-  return (
+  return view === "addCustomer" ? (
+    <CustomerForm original={blankCustomer} />
+  ) : (
     <>
       <menu>
         <li>
@@ -16,7 +18,6 @@ export const App = () => {
           </button>
         </li>
       </menu>
-      {view === "addCustomer" ? <CustomerForm original={blankCustomer} /> : null}
       <AppointmentsDayViewLoader />
     </>
   )

@@ -39,19 +39,27 @@ describe("App", () => {
     expect(firstButton).toContainText("Add customer and appointment")
   })
 
-  it("displays the CustomerForm when button is clicked", () => {
-    render(<App />)
-    beginAddingCustomerAndAppointment()
-    expect(CustomerForm).toBeRenderedWithProps(expect.anything())
-  })
+  describe("when customer and appointment button is clicked", () => {
+    it("displays the CustomerForm", () => {
+      render(<App />)
+      beginAddingCustomerAndAppointment()
+      expect(CustomerForm).toBeRenderedWithProps(expect.anything())
+    })
 
-  it("passes a blank original customer object to CustomerForm", async () => {
-    render(<App />)
-    beginAddingCustomerAndAppointment()
-    expect(CustomerForm).toBeRenderedWithProps(
-      expect.objectContaining({
-        original: blankCustomer,
-      })
-    )
+    it("passes a blank original customer object to CustomerForm", async () => {
+      render(<App />)
+      beginAddingCustomerAndAppointment()
+      expect(CustomerForm).toBeRenderedWithProps(
+        expect.objectContaining({
+          original: blankCustomer,
+        })
+      )
+    })
+
+    it("hides the AppointmentsDayViewLoader when CustomerForm is being displayed", async () => {
+      render(<App />)
+      beginAddingCustomerAndAppointment()
+      expect(element("menu")).toBeNull()
+    })
   })
 })
