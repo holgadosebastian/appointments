@@ -1,6 +1,7 @@
 import React from "react"
 import { toBeRenderedWithProps } from "./toBeRenderedWithProps"
 import { initializeReactContainer, render } from "../reactTestExtensions"
+import { stripTerminalColor } from "./matcherUtils"
 
 describe("toBeRenderedWithProps", () => {
   let Component
@@ -33,5 +34,28 @@ describe("toBeRenderedWithProps", () => {
 
     const result = toBeRenderedWithProps(Component, { c: "d" })
     expect(result.pass).toBe(true)
+  })
+
+  it("returns a message if no match", () => {
+    render(<Component a="b" />)
+    const result = toBeRenderedWithProps(Component, { c: "d" })
+
+    expect(stripTerminalColor(result.message())).toContain(`expect(Component).toBeRenderedWithProps({\"c\": \"d\"})`)
+  })
+
+  it("returns a message that contains the source line if negated match", () => {
+    render(<Component a="b" />)
+    const result = toBeRenderedWithProps(Component, { a: "b" })
+
+    expect(stripTerminalColor(result.message())).not.toContain(
+      `expect(element).not.toBeRenderedWithProps({\"c\": \"d\"})`
+    )
+  })
+
+  it("returns a message that contains the actual text", () => {
+    render(<Component a="b" />)
+    const result = toBeRenderedWithProps(Component, { a: "b" })
+
+    expect(stripTerminalColor(result.message())).toContain(`Actual props: {\"a\": \"b\"}`)
   })
 })
