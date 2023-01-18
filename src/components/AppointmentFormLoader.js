@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react"
 import { AppointmentForm } from "./AppointmentForm"
 
-export const AppointmentFormLoader = ({ today }) => {
+export const AppointmentFormLoader = ({ original, today }) => {
   const [availableTimeSlots, setAvailableTimeSlots] = useState([])
 
   useEffect(() => {
@@ -22,7 +22,7 @@ export const AppointmentFormLoader = ({ today }) => {
     fetchAvailableTimesSlots()
   }, [today])
 
-  return <AppointmentForm availableTimeSlots={availableTimeSlots} />
+  return <AppointmentForm availableTimeSlots={availableTimeSlots} original={original} />
 }
 
 AppointmentFormLoader.defaultProps = {

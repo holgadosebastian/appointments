@@ -6,6 +6,7 @@ import { AppointmentsDayViewLoader } from "../src/components/AppointmentsDayView
 import { AppointmentFormLoader } from "../src/components/AppointmentFormLoader"
 import { CustomerForm } from "../src/components/CustomerForm"
 import { blankCustomer } from "./builders/customer"
+import { blankAppointment } from "./builders/appointment"
 
 jest.mock("../src/components/AppointmentsDayViewLoader", () => ({
   AppointmentsDayViewLoader: jest.fn(() => <div id="AppointmentsDayViewLoader" />),
@@ -77,5 +78,17 @@ describe("App", () => {
     saveCustomer()
 
     expect(element("#AppointmentFormLoader")).not.toBeNull()
+  })
+
+  it("passes a blank original appointment object to Customer", async () => {
+    render(<App />)
+    beginAddingCustomerAndAppointment()
+    saveCustomer()
+
+    expect(AppointmentFormLoader).toBeRenderedWithProps(
+      expect.objectContaining({
+        original: expect.objectContaining(blankAppointment),
+      })
+    )
   })
 })

@@ -3,6 +3,7 @@ import { AppointmentsDayViewLoader } from "./components/AppointmentsDayViewLoade
 import { CustomerForm } from "./components/CustomerForm"
 import { AppointmentFormLoader } from "./components/AppointmentFormLoader"
 import { blankCustomer } from "../test/builders/customer"
+import { blankAppointment } from "../test/builders/appointment"
 
 export const App = () => {
   const [view, setView] = useState("dayView")
@@ -13,7 +14,7 @@ export const App = () => {
     case "addCustomer":
       return <CustomerForm original={blankCustomer} onSave={transitionToAddAppointment} />
     case "addAppointment":
-      return <AppointmentFormLoader />
+      return <AppointmentFormLoader original={blankAppointment} />
     default:
       return (
         <>
