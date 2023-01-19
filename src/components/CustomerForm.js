@@ -38,7 +38,15 @@ export const CustomerForm = ({ original, onSave }) => {
       <Error hasError={error} />
 
       <label htmlFor="firstName">First name</label>
-      <input type="text" name="firstName" id="firstName" value={customer.firstName} onChange={handleChange} />
+      <input
+        type="text"
+        name="firstName"
+        id="firstName"
+        value={customer.firstName}
+        onChange={handleChange}
+        aria-describedby="firstNameError"
+      />
+      <span id="firstNameError" role="alert"></span>
 
       <label htmlFor="lastName">Last name</label>
       <input type="text" name="lastName" id="lastName" value={customer.lastName} onChange={handleChange} />

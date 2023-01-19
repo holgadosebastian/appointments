@@ -15,6 +15,7 @@ import { bodyOfLastFetchRequest } from "./spyHelpers"
 import { fetchResponseOk, fetchResponseError } from "./builders/fetch"
 import { blankCustomer } from "./builders/customer"
 import { CustomerForm } from "../src/components/CustomerForm"
+import { blankAppointment } from "./builders/appointment"
 
 describe("CustomerForm", () => {
   beforeEach(() => {
@@ -193,6 +194,18 @@ describe("CustomerForm", () => {
       await clickAndWait(submitButton())
 
       expect(element("[role=alert]")).not.toContainText("error occurred")
+    })
+  })
+
+  describe("validation", () => {
+    it("renders an alert space for first name validation errors", () => {
+      render(<CustomerForm original={blankAppointment} />)
+      expect(element("#firstNameError[role=alert")).not.toBeNull()
+    })
+
+    it("sets alert as the accessible description for the first name field", async () => {
+      render(<CustomerForm original={blankCustomer} />)
+      expect(field("firstName").getAttribute("aria-describedby")).toEqual("firstNameError")
     })
   })
 })
