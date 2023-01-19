@@ -13,11 +13,10 @@ import {
 } from "./reactTestExtensions"
 import { bodyOfLastFetchRequest } from "./spyHelpers"
 import { fetchResponseOk, fetchResponseError } from "./builders/fetch"
+import { blankCustomer } from "./builders/customer"
 import { CustomerForm } from "../src/components/CustomerForm"
 
 describe("CustomerForm", () => {
-  const blankCustomer = { firstName: "", lastName: "", phoneNumber: "" }
-
   beforeEach(() => {
     initializeReactContainer()
     jest.spyOn(global, "fetch").mockResolvedValue(fetchResponseOk({}))

@@ -12,12 +12,12 @@ import {
 } from "./reactTestExtensions"
 import { today, todayAt, tomorrowAt } from "./builders/time"
 import { fetchResponseOk, fetchResponseError } from "./builders/fetch"
+import { blankAppointment } from "./builders/appointment"
 import { bodyOfLastFetchRequest } from "./spyHelpers"
 import { AppointmentForm } from "../src/components/AppointmentForm"
 
 describe("AppointmentForm", () => {
   const availableTimeSlots = [{ startsAt: todayAt(9) }, { startsAt: todayAt(9, 30) }]
-  const blankAppointment = { service: "" }
   const services = ["Cut", "Blow-dry"]
   const testProps = {
     today,
