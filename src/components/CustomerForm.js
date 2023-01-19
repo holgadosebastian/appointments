@@ -44,7 +44,13 @@ export const CustomerForm = ({ original, onSave }) => {
     })
   }
 
-  const hasFirstNameError = () => validationErrors.firstName !== undefined
+  const hasError = fieldName => validationErrors[fieldName] !== undefined
+
+  const renderFirstNameError = fieldName => (
+    <span id={`${fieldName}Error`} role="alert">
+      {hasError(fieldName) ? validationErrors[fieldName] : ""}
+    </span>
+  )
 
   return (
     <form onSubmit={handleSubmit}>
@@ -60,10 +66,7 @@ export const CustomerForm = ({ original, onSave }) => {
         onBlur={handleBlur}
         aria-describedby="firstNameError"
       />
-
-      <span id="firstNameError" role="alert">
-        {hasFirstNameError() ? validationErrors["firstName"] : ""}
-      </span>
+      {renderFirstNameError("firstName")}
 
       <label htmlFor="lastName">Last name</label>
       <input type="text" name="lastName" id="lastName" value={customer.lastName} onChange={handleChange} />
