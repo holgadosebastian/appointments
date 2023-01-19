@@ -1,10 +1,13 @@
 import React, { useState } from "react"
 
+const required = value => (!value || value.trim() === "" ? "First name is required" : undefined)
+
 const Error = ({ hasError }) => <p role="alert">{hasError ? "An error occurred during save." : ""}</p>
 
 export const CustomerForm = ({ original, onSave }) => {
   const [customer, setCustomer] = useState(original)
   const [error, setError] = useState(false)
+  const [validationErrors, setValidationErrors] = useState({})
 
   const handleSubmit = async event => {
     event.preventDefault()
@@ -33,6 +36,16 @@ export const CustomerForm = ({ original, onSave }) => {
     }))
   }
 
+  const handleBlur = ({ target }) => {
+    const result = required(target.value)
+    setValidationErrors({
+      ...validationErrors,
+      firstName: result,
+    })
+  }
+
+  const hasFirstNameError = () => validationErrors.firstName !== undefined
+
   return (
     <form onSubmit={handleSubmit}>
       <Error hasError={error} />
@@ -44,9 +57,13 @@ export const CustomerForm = ({ original, onSave }) => {
         id="firstName"
         value={customer.firstName}
         onChange={handleChange}
+        onBlur={handleBlur}
         aria-describedby="firstNameError"
       />
-      <span id="firstNameError" role="alert"></span>
+
+      <span id="firstNameError" role="alert">
+        {hasFirstNameError() ? validationErrors["firstName"] : ""}
+      </span>
 
       <label htmlFor="lastName">Last name</label>
       <input type="text" name="lastName" id="lastName" value={customer.lastName} onChange={handleChange} />

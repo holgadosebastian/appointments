@@ -10,12 +10,14 @@ import {
   labelFor,
   clickAndWait,
   submitAndWait,
+  withFocus,
 } from "./reactTestExtensions"
 import { bodyOfLastFetchRequest } from "./spyHelpers"
 import { fetchResponseOk, fetchResponseError } from "./builders/fetch"
 import { blankCustomer } from "./builders/customer"
 import { CustomerForm } from "../src/components/CustomerForm"
 import { blankAppointment } from "./builders/appointment"
+import { util } from "webpack"
 
 describe("CustomerForm", () => {
   beforeEach(() => {
@@ -206,6 +208,19 @@ describe("CustomerForm", () => {
     it("sets alert as the accessible description for the first name field", async () => {
       render(<CustomerForm original={blankCustomer} />)
       expect(field("firstName").getAttribute("aria-describedby")).toEqual("firstNameError")
+    })
+
+    it("displays error after blur when first name field is blank", () => {
+      render(<CustomerForm original={blankCustomer} />)
+
+      withFocus(field("firstName"), () => change(field("firstName"), " "))
+
+      expect(element("#firstNameError[role=alert]")).toContainText("First name is required")
+    })
+
+    it("initially has no text in the first name field alert space", async () => {
+      render(<CustomerForm original={blankCustomer} />)
+      expect(element("#firstNameError[role=alert]").textContent).toEqual("")
     })
   })
 })

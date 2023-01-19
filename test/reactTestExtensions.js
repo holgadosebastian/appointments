@@ -71,3 +71,10 @@ export const propsOf = mockComponent => {
   console.log("lastCall", lastCall)
   return lastCall[0]
 }
+
+export const withFocus = (target, fn) =>
+  act(() => {
+    target.focus()
+    fn()
+    target.blur()
+  })
