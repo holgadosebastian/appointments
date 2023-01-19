@@ -39,6 +39,8 @@ export const CustomerForm = ({ original, onSave }) => {
   const handleBlur = ({ target }) => {
     const validators = {
       firstName: required("First name is required"),
+      lastName: required("Last name is required"),
+      phoneNumber: required("Phone number is required"),
     }
     const result = validators[target.name](target.value)
     setValidationErrors({
@@ -49,7 +51,7 @@ export const CustomerForm = ({ original, onSave }) => {
 
   const hasError = fieldName => validationErrors[fieldName] !== undefined
 
-  const renderFirstNameError = fieldName => (
+  const renderError = fieldName => (
     <span id={`${fieldName}Error`} role="alert">
       {hasError(fieldName) ? validationErrors[fieldName] : ""}
     </span>
@@ -69,13 +71,31 @@ export const CustomerForm = ({ original, onSave }) => {
         onBlur={handleBlur}
         aria-describedby="firstNameError"
       />
-      {renderFirstNameError("firstName")}
+      {renderError("firstName")}
 
       <label htmlFor="lastName">Last name</label>
-      <input type="text" name="lastName" id="lastName" value={customer.lastName} onChange={handleChange} />
+      <input
+        type="text"
+        name="lastName"
+        id="lastName"
+        value={customer.lastName}
+        onChange={handleChange}
+        onBlur={handleBlur}
+        aria-describedby="lastNameError"
+      />
+      {renderError("lastName")}
 
       <label htmlFor="phoneNumber">Phone number</label>
-      <input type="text" name="phoneNumber" id="phoneNumber" value={customer.phoneNumber} onChange={handleChange} />
+      <input
+        type="text"
+        name="phoneNumber"
+        id="phoneNumber"
+        value={customer.phoneNumber}
+        onChange={handleChange}
+        onBlur={handleBlur}
+        aria-describedby="phoneNumberError"
+      />
+      {renderError("phoneNumber")}
 
       <input type="submit" value="Add" />
     </form>

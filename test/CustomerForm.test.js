@@ -222,14 +222,14 @@ describe("CustomerForm", () => {
 
         withFocus(field(fieldName), () => change(field(fieldName), value))
 
-        expect(element(`#${fieldName}Error[role=alert]`)).toContainText(description)
+        expect(errorFor(fieldName)).toContainText(description)
       })
     }
 
     const itInitiallyHasNoTextInTheAlertSpace = fieldName => {
       it(`initially has no text in the ${fieldName} field alert space`, async () => {
         render(<CustomerForm original={blankCustomer} />)
-        expect(element(`#${fieldName}Error[role=alert]`).textContent).toEqual("")
+        expect(errorFor(fieldName).textContent).toEqual("")
       })
     }
 
@@ -237,5 +237,15 @@ describe("CustomerForm", () => {
     itSetsAlertAsAccessibleDescriptionForField("firstName")
     itValidatesFieldWithValue("firstName", " ", "First name is required")
     itInitiallyHasNoTextInTheAlertSpace("firstName")
+
+    itRendersAlertForFieldValidation("lastName")
+    itSetsAlertAsAccessibleDescriptionForField("lastName")
+    itValidatesFieldWithValue("lastName", " ", "Last name is required")
+    itInitiallyHasNoTextInTheAlertSpace("lastName")
+
+    itRendersAlertForFieldValidation("phoneNumber")
+    itSetsAlertAsAccessibleDescriptionForField("phoneNumber")
+    itValidatesFieldWithValue("phoneNumber", " ", "Phone number is required")
+    itInitiallyHasNoTextInTheAlertSpace("phoneNumber")
   })
 })
