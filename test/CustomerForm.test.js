@@ -216,7 +216,7 @@ describe("CustomerForm", () => {
       })
     }
 
-    const itValidatesFieldWithValue = (fieldName, value, description) => {
+    const itInvalidatesFieldWithValue = (fieldName, value, description) => {
       it(`displays error after blur when ${fieldName} field is blank`, () => {
         render(<CustomerForm original={blankCustomer} />)
 
@@ -235,17 +235,25 @@ describe("CustomerForm", () => {
 
     itRendersAlertForFieldValidation("firstName")
     itSetsAlertAsAccessibleDescriptionForField("firstName")
-    itValidatesFieldWithValue("firstName", " ", "First name is required")
+    itInvalidatesFieldWithValue("firstName", " ", "First name is required")
     itInitiallyHasNoTextInTheAlertSpace("firstName")
 
     itRendersAlertForFieldValidation("lastName")
     itSetsAlertAsAccessibleDescriptionForField("lastName")
-    itValidatesFieldWithValue("lastName", " ", "Last name is required")
+    itInvalidatesFieldWithValue("lastName", " ", "Last name is required")
     itInitiallyHasNoTextInTheAlertSpace("lastName")
 
     itRendersAlertForFieldValidation("phoneNumber")
     itSetsAlertAsAccessibleDescriptionForField("phoneNumber")
-    itValidatesFieldWithValue("phoneNumber", " ", "Phone number is required")
+    itInvalidatesFieldWithValue("phoneNumber", " ", "Phone number is required")
     itInitiallyHasNoTextInTheAlertSpace("phoneNumber")
+    itInvalidatesFieldWithValue("phoneNumber", "invalid", "Only numbers, spaces and the symbols are allowed: ( ) + -")
+    it("accepts standard phone number characters when validating", () => {
+      render(<CustomerForm original={blankCustomer} />)
+
+      withFocus(field("phoneNumber"), () => change(field("phoneNumber"), "0123456789+()- "))
+
+      expect(errorFor("phoneNumber")).not.toContainText("Only numbers")
+    })
   })
 })
