@@ -68,7 +68,6 @@ export const renderAndWait = component => act(async () => reactRoot.render(compo
 export const propsOf = mockComponent => {
   const lastCall = mockComponent.mock.calls[mockComponent.mock.calls.length - 1]
 
-  console.log("lastCall", lastCall)
   return lastCall[0]
 }
 

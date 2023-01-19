@@ -1,6 +1,6 @@
 import React, { useState } from "react"
 
-const required = value => (!value || value.trim() === "" ? "First name is required" : undefined)
+const required = description => value => (!value || value.trim() === "" ? description : undefined)
 
 const Error = ({ hasError }) => <p role="alert">{hasError ? "An error occurred during save." : ""}</p>
 
@@ -37,10 +37,13 @@ export const CustomerForm = ({ original, onSave }) => {
   }
 
   const handleBlur = ({ target }) => {
-    const result = required(target.value)
+    const validators = {
+      firstName: required("First name is required"),
+    }
+    const result = validators[target.name](target.value)
     setValidationErrors({
       ...validationErrors,
-      firstName: result,
+      [target.name]: result,
     })
   }
 
