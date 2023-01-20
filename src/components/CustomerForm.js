@@ -18,6 +18,25 @@ export const CustomerForm = ({ original, onSave }) => {
     ),
   }
 
+  const doSave = async () => {
+    const result = await global.fetch("/customers", {
+      method: "POST",
+      credentials: "same-origin",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(customer),
+    })
+
+    if (result.ok) {
+      const customerWithId = await result.json()
+      onSave(customerWithId)
+    } else if (result.status === 422) {
+      const response = await result.json()
+      setValidationErrors(response.errors)
+    } else {
+      setError(true)
+    }
+  }
+
   const handleSubmit = async event => {
     event.preventDefault()
 
@@ -26,27 +45,12 @@ export const CustomerForm = ({ original, onSave }) => {
 
     const validationResult = validateMany(validators, customer)
     if (!anyErrors(validationResult)) {
-      const result = await global.fetch("/customers", {
-        method: "POST",
-        credentials: "same-origin",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(customer),
-      })
-
-      if (result.ok) {
-        const customerWithId = await result.json()
-        onSave(customerWithId)
-      } else if (result.status === 422) {
-        const response = await result.json()
-        setValidationErrors(response.errors)
-      } else {
-        setError(true)
-      }
-
-      setSubmitting(false)
+      await doSave()
     } else {
       setValidationErrors(validationResult)
     }
+
+    setSubmitting(false)
   }
 
   const handleChange = ({ target }) => {
