@@ -1,4 +1,5 @@
 import React from "react"
+import { act } from "react-dom/test-utils"
 import {
   initializeReactContainer,
   render,
@@ -8,6 +9,7 @@ import {
   submitButton,
   change,
   labelFor,
+  click,
   clickAndWait,
   submitAndWait,
   withFocus,
@@ -281,5 +283,26 @@ describe("CustomerForm", () => {
     render(<CustomerForm original={blankCustomer} />)
     await clickAndWait(submitButton())
     expect(textOf(elements("[role=alert]"))).not.toEqual(["", "", "", ""])
+  })
+
+  describe("submitting indicator", () => {
+    it("displays when form is submitting", async () => {
+      render(<CustomerForm original={validCustomer} onSave={() => {}} />)
+
+      click(submitButton())
+      await act(async () => expect(element("span.submittingIndicator")).not.toBeNull())
+    })
+
+    it("initially does not display the submitting indicator", () => {
+      render(<CustomerForm original={validCustomer} onSave={() => {}} />)
+      expect(element("span.submittingIndicator")).toBeNull()
+    })
+
+    it("hides after submission", async () => {
+      render(<CustomerForm original={validCustomer} onSave={() => {}} />)
+
+      await clickAndWait(submitButton())
+      expect(element("span.submittingIndicator")).toBeNull()
+    })
   })
 })

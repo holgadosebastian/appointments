@@ -7,6 +7,7 @@ export const CustomerForm = ({ original, onSave }) => {
   const [customer, setCustomer] = useState(original)
   const [error, setError] = useState(false)
   const [validationErrors, setValidationErrors] = useState({})
+  const [submitting, setSubmitting] = useState(false)
 
   const validators = {
     firstName: required("First name is required"),
@@ -20,6 +21,7 @@ export const CustomerForm = ({ original, onSave }) => {
   const handleSubmit = async event => {
     event.preventDefault()
 
+    setSubmitting(true)
     setError(false)
 
     const validationResult = validateMany(validators, customer)
@@ -40,6 +42,8 @@ export const CustomerForm = ({ original, onSave }) => {
       } else {
         setError(true)
       }
+
+      setSubmitting(false)
     } else {
       setValidationErrors(validationResult)
     }
@@ -109,6 +113,7 @@ export const CustomerForm = ({ original, onSave }) => {
       {renderError("phoneNumber")}
 
       <input type="submit" value="Add" />
+      {submitting && <span className="submittingIndicator"></span>}
     </form>
   )
 }
