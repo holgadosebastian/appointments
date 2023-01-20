@@ -21,6 +21,8 @@ import { CustomerForm } from "../src/components/CustomerForm"
 import { blankAppointment } from "./builders/appointment"
 
 describe("CustomerForm", () => {
+  const errorFor = fieldName => element(`#${fieldName}Error[role=alert]`)
+
   beforeEach(() => {
     initializeReactContainer()
     jest.spyOn(global, "fetch").mockResolvedValue(fetchResponseOk({}))
@@ -198,11 +200,21 @@ describe("CustomerForm", () => {
 
       expect(element("[role=alert]")).not.toContainText("error occurred")
     })
+
+    it("renders field validation errors from server", async () => {
+      const errors = {
+        phoneNumber: "Phone number already exists in the system",
+      }
+
+      global.fetch.mockResolvedValue(fetchResponseError(422, { errors }))
+
+      render(<CustomerForm original={validCustomer} />)
+      await clickAndWait(submitButton())
+      expect(errorFor("phoneNumber")).toContainText(errors.phoneNumber)
+    })
   })
 
   describe("validation", () => {
-    const errorFor = fieldName => element(`#${fieldName}Error[role=alert]`)
-
     const itRendersAlertForFieldValidation = fieldName => {
       it(`renders an alert space for ${fieldName} validation errors`, async () => {
         render(<CustomerForm original={blankAppointment} />)

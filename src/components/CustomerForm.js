@@ -1,8 +1,5 @@
 import React, { useState } from "react"
-
-const required = description => value => (!value || value.trim() === "" ? description : undefined)
-const match = (re, description) => value => (!value.match(re) ? description : undefined)
-const list = (...validators) => value => validators.reduce((result, validator) => result || validator(value), undefined)
+import { required, match, list, hasError, validateMany, anyErrors } from "../formValidations"
 
 const Error = ({ hasError }) => <p role="alert">{hasError ? "An error occurred during save." : ""}</p>
 
@@ -25,7 +22,7 @@ export const CustomerForm = ({ original, onSave }) => {
 
     setError(false)
 
-    const validationResult = validateMany(customer)
+    const validationResult = validateMany(validators, customer)
     if (!anyErrors(validationResult)) {
       const result = await global.fetch("/customers", {
         method: "POST",
@@ -37,6 +34,9 @@ export const CustomerForm = ({ original, onSave }) => {
       if (result.ok) {
         const customerWithId = await result.json()
         onSave(customerWithId)
+      } else if (result.status === 422) {
+        const response = await result.json()
+        setValidationErrors(response.errors)
       } else {
         setError(true)
       }
@@ -53,25 +53,20 @@ export const CustomerForm = ({ original, onSave }) => {
   }
 
   const handleBlur = ({ target }) => {
-    const result = validators[target.name](target.value)
+    const result = validateMany(validators, {
+      [target.name]: target.value,
+    })
     setValidationErrors({
       ...validationErrors,
-      [target.name]: result,
+      ...result,
     })
   }
 
-  const hasError = fieldName => validationErrors[fieldName] !== undefined
-
   const renderError = fieldName => (
     <span id={`${fieldName}Error`} role="alert">
-      {hasError(fieldName) ? validationErrors[fieldName] : ""}
+      {hasError(validationErrors, fieldName) ? validationErrors[fieldName] : ""}
     </span>
   )
-
-  const validateMany = fields =>
-    Object.entries(fields).reduce((result, [name, value]) => ({ ...result, [name]: validators[name](value) }), {})
-
-  const anyErrors = errors => Object.values(errors).some(error => error !== undefined)
 
   return (
     <form onSubmit={handleSubmit}>
