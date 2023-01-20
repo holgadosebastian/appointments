@@ -16,25 +16,36 @@ export const App = () => {
     setView("addAppointment")
   }, [])
 
-  switch (view) {
-    case "addCustomer":
-      return <CustomerForm original={blankCustomer} onSave={transitionToAddAppointment} />
-    case "addAppointment":
-      return (
-        <AppointmentFormLoader original={{ ...blankAppointment, customer: customer.id }} onSave={transitionToDayView} />
-      )
-    default:
-      return (
-        <>
-          <menu>
-            <li>
-              <button type="button" onClick={transitionToAddCustomer}>
-                Add customer and appointment
-              </button>
-            </li>
-          </menu>
-          <AppointmentsDayViewLoader />
-        </>
-      )
+  const Content = () => {
+    switch (view) {
+      case "addCustomer":
+        return <CustomerForm original={blankCustomer} onSave={transitionToAddAppointment} />
+      case "addAppointment":
+        return (
+          <AppointmentFormLoader
+            original={{ ...blankAppointment, customer: customer.id }}
+            onSave={transitionToDayView}
+          />
+        )
+      default:
+        return (
+          <>
+            <menu>
+              <li>
+                <button type="button" onClick={transitionToAddCustomer}>
+                  Add customer and appointment
+                </button>
+              </li>
+            </menu>
+            <AppointmentsDayViewLoader />
+          </>
+        )
+    }
   }
+
+  return (
+    <div class="container mx-auto">
+      <Content />
+    </div>
+  )
 }

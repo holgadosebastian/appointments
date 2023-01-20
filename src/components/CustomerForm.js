@@ -70,54 +70,75 @@ export const CustomerForm = ({ original, onSave }) => {
     })
   }
 
-  const renderError = fieldName => (
-    <span id={`${fieldName}Error`} role="alert">
-      {hasError(validationErrors, fieldName) ? validationErrors[fieldName] : ""}
-    </span>
-  )
+  const renderError = fieldName => {
+    return hasError(validationErrors, fieldName) ? (
+      <p className="mt-2 text-sm text-red-500" id={`${fieldName}Error`} role="alert">
+        {validationErrors[fieldName]}
+      </p>
+    ) : null
+  }
 
   return (
     <form onSubmit={handleSubmit}>
       <Error hasError={error} />
 
-      <label htmlFor="firstName">First name</label>
-      <input
-        type="text"
-        name="firstName"
-        id="firstName"
-        value={customer.firstName}
-        onChange={handleChange}
-        onBlur={handleBlur}
-        aria-describedby="firstNameError"
-      />
-      {renderError("firstName")}
+      <div>
+        <label className="block mb-2" htmlFor="firstName">
+          First name
+        </label>
+        <input
+          className="block w-full border border-slate-300 rounded text-md px-2 py-1"
+          type="text"
+          name="firstName"
+          id="firstName"
+          value={customer.firstName}
+          onChange={handleChange}
+          onBlur={handleBlur}
+          aria-describedby="firstNameError"
+        />
+        {renderError("firstName")}
+      </div>
 
-      <label htmlFor="lastName">Last name</label>
-      <input
-        type="text"
-        name="lastName"
-        id="lastName"
-        value={customer.lastName}
-        onChange={handleChange}
-        onBlur={handleBlur}
-        aria-describedby="lastNameError"
-      />
-      {renderError("lastName")}
+      <div>
+        <label className="block mb-2" htmlFor="lastName">
+          Last name
+        </label>
+        <input
+          className="block w-full border border-slate-300 rounded text-md px-2 py-1"
+          type="text"
+          name="lastName"
+          id="lastName"
+          value={customer.lastName}
+          onChange={handleChange}
+          onBlur={handleBlur}
+          aria-describedby="lastNameError"
+        />
+        {renderError("lastName")}
+      </div>
 
-      <label htmlFor="phoneNumber">Phone number</label>
-      <input
-        type="text"
-        name="phoneNumber"
-        id="phoneNumber"
-        value={customer.phoneNumber}
-        onChange={handleChange}
-        onBlur={handleBlur}
-        aria-describedby="phoneNumberError"
-      />
-      {renderError("phoneNumber")}
+      <div>
+        <label className="block mb-2" htmlFor="phoneNumber">
+          Phone number
+        </label>
+        <input
+          className="block w-full border border-slate-300 rounded text-md px-2 py-1"
+          type="text"
+          name="phoneNumber"
+          id="phoneNumber"
+          value={customer.phoneNumber}
+          onChange={handleChange}
+          onBlur={handleBlur}
+          aria-describedby="phoneNumberError"
+        />
+        {renderError("phoneNumber")}
+      </div>
 
-      <input type="submit" value="Add" />
-      {submitting && <span className="submittingIndicator"></span>}
+      <input
+        className="mt-2 block w-full px-2 py-1 bg-teal-500 text-white rounded text-sm cursor-pointer"
+        type="submit"
+        value="Add"
+      />
+      {submitting && <span className="submittingIndicator">Loading</span>}
     </form>
   )
 }
