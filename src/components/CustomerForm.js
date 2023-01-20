@@ -1,7 +1,11 @@
 import React, { useState } from "react"
 import { required, match, list, hasError, validateMany, anyErrors } from "../formValidations"
 
-const Error = ({ hasError }) => <p role="alert">{hasError ? "An error occurred during save." : ""}</p>
+const Error = ({ hasError }) => (
+  <p className="text-sm text-red-500" role="alert">
+    {hasError ? "An error occurred during save." : ""}
+  </p>
+)
 
 export const CustomerForm = ({ original, onSave }) => {
   const [customer, setCustomer] = useState(original)
@@ -80,8 +84,6 @@ export const CustomerForm = ({ original, onSave }) => {
 
   return (
     <form onSubmit={handleSubmit}>
-      <Error hasError={error} />
-
       <div>
         <label className="block mb-2" htmlFor="firstName">
           First name
@@ -132,6 +134,8 @@ export const CustomerForm = ({ original, onSave }) => {
         />
         {renderError("phoneNumber")}
       </div>
+
+      <Error hasError={error} />
 
       <input
         className="mt-2 block w-full px-2 py-1 bg-teal-500 text-white rounded text-sm cursor-pointer"
