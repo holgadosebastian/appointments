@@ -57,21 +57,27 @@ export const CustomerForm = ({ original, onSave }) => {
     setSubmitting(false)
   }
 
+  const validateField = (name, value) => {
+    const result = validateMany(validators, {
+      [name]: value,
+    })
+
+    setValidationErrors({
+      ...validationErrors,
+      ...result,
+    })
+  }
+
   const handleChange = ({ target }) => {
     setCustomer(customer => ({
       ...customer,
       [target.name]: target.value,
     }))
+    validateField(target.name, target.value)
   }
 
   const handleBlur = ({ target }) => {
-    const result = validateMany(validators, {
-      [target.name]: target.value,
-    })
-    setValidationErrors({
-      ...validationErrors,
-      ...result,
-    })
+    validateField(target.name, target.value)
   }
 
   const renderError = fieldName => {
