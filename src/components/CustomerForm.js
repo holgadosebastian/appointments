@@ -11,23 +11,35 @@ export const CustomerForm = ({ original, onSave }) => {
   const [error, setError] = useState(false)
   const [validationErrors, setValidationErrors] = useState({})
 
+  const validators = {
+    firstName: required("First name is required"),
+    lastName: required("Last name is required"),
+    phoneNumber: list(
+      required("Phone number is required"),
+      match(/^[0-9+()\- ]*$/, "Only numbers, spaces and the symbols are allowed: ( ) + -")
+    ),
+  }
+
   const handleSubmit = async event => {
     event.preventDefault()
 
     setError(false)
 
-    const result = await global.fetch("/customers", {
-      method: "POST",
-      credentials: "same-origin",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(customer),
-    })
+    const validationResult = validateMany(customer)
+    if (!anyErrors(validationResult)) {
+      const result = await global.fetch("/customers", {
+        method: "POST",
+        credentials: "same-origin",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(customer),
+      })
 
-    if (result.ok) {
-      const customerWithId = await result.json()
-      onSave(customerWithId)
-    } else {
-      setError(true)
+      if (result.ok) {
+        const customerWithId = await result.json()
+        onSave(customerWithId)
+      } else {
+        setError(true)
+      }
     }
   }
 
@@ -39,14 +51,6 @@ export const CustomerForm = ({ original, onSave }) => {
   }
 
   const handleBlur = ({ target }) => {
-    const validators = {
-      firstName: required("First name is required"),
-      lastName: required("Last name is required"),
-      phoneNumber: list(
-        required("Phone number is required"),
-        match(/^[0-9+()\- ]*$/, "Only numbers, spaces and the symbols are allowed: ( ) + -")
-      ),
-    }
     const result = validators[target.name](target.value)
     setValidationErrors({
       ...validationErrors,
@@ -61,6 +65,11 @@ export const CustomerForm = ({ original, onSave }) => {
       {hasError(fieldName) ? validationErrors[fieldName] : ""}
     </span>
   )
+
+  const validateMany = fields =>
+    Object.entries(fields).reduce((result, [name, value]) => ({ ...result, [name]: validators[name](value) }), {})
+
+  const anyErrors = errors => Object.values(errors).some(error => error !== undefined)
 
   return (
     <form onSubmit={handleSubmit}>

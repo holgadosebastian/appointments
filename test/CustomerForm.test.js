@@ -14,10 +14,9 @@ import {
 } from "./reactTestExtensions"
 import { bodyOfLastFetchRequest } from "./spyHelpers"
 import { fetchResponseOk, fetchResponseError } from "./builders/fetch"
-import { blankCustomer } from "./builders/customer"
+import { blankCustomer, validCustomer } from "./builders/customer"
 import { CustomerForm } from "../src/components/CustomerForm"
 import { blankAppointment } from "./builders/appointment"
-import { util } from "webpack"
 
 describe("CustomerForm", () => {
   beforeEach(() => {
@@ -74,16 +73,16 @@ describe("CustomerForm", () => {
   const itSavesExistingValueWhenSubmitted = (fieldName, value) => {
     it("saves existing value when submitted", async () => {
       const customer = { [fieldName]: value }
-      render(<CustomerForm original={customer} onSave={() => {}} />)
+      render(<CustomerForm original={validCustomer} onSave={() => {}} />)
       clickAndWait(submitButton())
 
-      expect(bodyOfLastFetchRequest()).toMatchObject(customer)
+      expect(bodyOfLastFetchRequest()).toMatchObject(validCustomer)
     })
   }
 
   const itSavesNewValueWhenSubmitted = (fieldName, newValue) => {
     it("saves new value when submitted", async () => {
-      render(<CustomerForm original={blankCustomer} onSave={() => {}} />)
+      render(<CustomerForm original={validCustomer} onSave={() => {}} />)
       change(field(fieldName), newValue)
       clickAndWait(submitButton())
 
@@ -127,13 +126,13 @@ describe("CustomerForm", () => {
   })
 
   it("sends request to POST /customers when submitting the form", async () => {
-    render(<CustomerForm original={blankCustomer} onSave={() => {}} />)
+    render(<CustomerForm original={validCustomer} onSave={() => {}} />)
     clickAndWait(submitButton())
     expect(global.fetch).toBeCalledWith("/customers", expect.objectContaining({ method: "POST" }))
   })
 
   it("calls fetch with the right configuration", async () => {
-    render(<CustomerForm original={blankCustomer} onSave={() => {}} />)
+    render(<CustomerForm original={validCustomer} onSave={() => {}} />)
     clickAndWait(submitButton())
     expect(global.fetch).toBeCalledWith(
       expect.anything(),
@@ -151,7 +150,7 @@ describe("CustomerForm", () => {
     global.fetch.mockResolvedValue(fetchResponseOk(customer))
     const saveSpy = jest.fn()
 
-    render(<CustomerForm original={customer} onSave={saveSpy} />)
+    render(<CustomerForm original={validCustomer} onSave={saveSpy} />)
     await clickAndWait(submitButton())
 
     expect(saveSpy).toBeCalledWith(customer)
@@ -175,14 +174,14 @@ describe("CustomerForm", () => {
     it("does not notify onSave ", async () => {
       const saveSpy = jest.fn()
 
-      render(<CustomerForm original={blankCustomer} onSave={saveSpy} />)
+      render(<CustomerForm original={validCustomer} onSave={saveSpy} />)
       await clickAndWait(submitButton())
 
       expect(saveSpy).not.toBeCalled()
     })
 
     it("renders an error message", async () => {
-      render(<CustomerForm original={blankCustomer} />)
+      render(<CustomerForm original={validCustomer} />)
       await clickAndWait(submitButton())
 
       expect(element("[role=alert]")).toContainText("error occurred")
@@ -255,5 +254,12 @@ describe("CustomerForm", () => {
 
       expect(errorFor("phoneNumber")).not.toContainText("Only numbers")
     })
+  })
+
+  it("does not asubmit the form when there are validation errors", async () => {
+    render(<CustomerForm original={blankCustomer} onSave={() => {}} />)
+
+    await clickAndWait(submitButton())
+    expect(global.fetch).not.toBeCalled()
   })
 })
