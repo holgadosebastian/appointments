@@ -44,7 +44,7 @@ export const App = () => {
   }
 
   return (
-    <div class="container mx-auto">
+    <div className="container mx-auto">
       <Content />
     </div>
   )
