@@ -40,6 +40,8 @@ export const CustomerForm = ({ original, onSave }) => {
       } else {
         setError(true)
       }
+    } else {
+      setValidationErrors(validationResult)
     }
   }
 

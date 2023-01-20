@@ -11,6 +11,8 @@ import {
   clickAndWait,
   submitAndWait,
   withFocus,
+  textOf,
+  elements,
 } from "./reactTestExtensions"
 import { bodyOfLastFetchRequest } from "./spyHelpers"
 import { fetchResponseOk, fetchResponseError } from "./builders/fetch"
@@ -261,5 +263,11 @@ describe("CustomerForm", () => {
 
     await clickAndWait(submitButton())
     expect(global.fetch).not.toBeCalled()
+  })
+
+  it("renders validation error after submission fails", async () => {
+    render(<CustomerForm original={blankCustomer} />)
+    await clickAndWait(submitButton())
+    expect(textOf(elements("[role=alert]"))).not.toEqual(["", "", "", ""])
   })
 })
