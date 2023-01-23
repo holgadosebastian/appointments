@@ -85,4 +85,14 @@ describe("CustomerSearch", () => {
     await clickAndWait(buttonWithLabel("Next"))
     expect(global.fetch).toHaveBeenLastCalledWith("/customers?after=9", expect.anything())
   })
+
+  it("displays next page of data when next button is clicked", async () => {
+    const nextCustomer = [{ id: "next", firstName: "Next" }]
+
+    global.fetch.mockResolvedValueOnce(fetchResponseOk(tenCustomers)).mockResolvedValue(fetchResponseOk(nextCustomer))
+    await renderAndWait(<CustomerSearch />)
+    await clickAndWait(buttonWithLabel("Next"))
+    expect(elements("tbody tr")).toHaveLength(1)
+    expect(elements("td")[0]).toContainText("Next")
+  })
 })

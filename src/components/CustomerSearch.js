@@ -34,14 +34,17 @@ export const CustomerSearch = () => {
     getCustomers()
   }, [])
 
-  const handleNext = useCallback(() => {
+  const handleNext = useCallback(async () => {
     const after = customers[customers.length - 1].id
     const url = `/customers?after=${after}`
-    global.fetch(url, {
+    const result = await global.fetch(url, {
       method: "GET",
       credentials: "same-origin",
       headers: { "Content-Type": "application/json" },
     })
+
+    const data = await result.json()
+    setCustomers(data)
   }, [customers])
 
   return (
