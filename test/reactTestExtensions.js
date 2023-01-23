@@ -65,6 +65,8 @@ export const submitAndWait = async formElement => act(async () => submit(formEle
 
 export const renderAndWait = component => act(async () => reactRoot.render(component))
 
+export const changeAndWait = async (target, value) => act(async () => change(target, value))
+
 export const propsOf = mockComponent => {
   const lastCall = mockComponent.mock.calls[mockComponent.mock.calls.length - 1]
 
