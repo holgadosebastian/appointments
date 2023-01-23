@@ -8,8 +8,11 @@ const CustomerRow = ({ customer }) => (
   </tr>
 )
 
-const SearchButtons = ({ handleNext }) => (
+const SearchButtons = ({ handleNext, handlePrevious }) => (
   <menu>
+    <li>
+      <button onClick={handlePrevious}>Previous</button>
+    </li>
     <li>
       <button onClick={handleNext}>Next</button>
     </li>
@@ -19,6 +22,7 @@ const SearchButtons = ({ handleNext }) => (
 export const CustomerSearch = () => {
   const [customers, setCustomers] = useState([])
   const [queryString, setQueryString] = useState("")
+  const [previousQueryString, setPreviousQueryString] = useState("")
 
   useEffect(() => {
     const getCustomers = async () => {
@@ -38,12 +42,15 @@ export const CustomerSearch = () => {
   const handleNext = useCallback(async () => {
     const after = customers[customers.length - 1].id
     const newQueryString = `?after=${after}`
+    setPreviousQueryString(queryString)
     setQueryString(newQueryString)
-  }, [customers])
+  }, [customers, queryString])
+
+  const handlePrevious = useCallback(() => setQueryString(previousQueryString), [previousQueryString])
 
   return (
     <>
-      <SearchButtons handleNext={handleNext} />
+      <SearchButtons handleNext={handleNext} handlePrevious={handlePrevious} />
       <table>
         <thead>
           <tr>
