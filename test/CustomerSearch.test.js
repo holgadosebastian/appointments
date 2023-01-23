@@ -1,5 +1,5 @@
 import React from "react"
-import { initializeReactContainer, elements, renderAndWait, textOf } from "./reactTestExtensions"
+import { initializeReactContainer, elements, renderAndWait, textOf, buttonWithLabel } from "./reactTestExtensions"
 import { fetchResponseOk } from "./builders/fetch"
 import { CustomerSearch } from "../src/components/CustomerSearch"
 
@@ -20,7 +20,7 @@ const twoCustomers = [
     phoneNumber: "1",
   },
   {
-    id: 1,
+    id: 2,
     firstName: "C",
     lastName: "D",
     phoneNumber: "2",
@@ -63,5 +63,10 @@ describe("CustomerSearch", () => {
     const rows = elements("table tbody tr")
     expect(rows[1].childNodes[0]).toContainText("C")
     expect(rows[1].childNodes[2]).toContainText("2")
+  })
+
+  it("has a next button", async () => {
+    await renderAndWait(<CustomerSearch />)
+    expect(buttonWithLabel("Next")).not.toBeNull()
   })
 })

@@ -77,3 +77,5 @@ export const withFocus = (target, fn) =>
     fn()
     target.blur()
   })
+
+export const buttonWithLabel = label => elements("button").find(({ textContent }) => textContent === label)

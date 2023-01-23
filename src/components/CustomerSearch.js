@@ -8,6 +8,14 @@ const CustomerRow = ({ customer }) => (
   </tr>
 )
 
+const SearchButtons = () => (
+  <menu>
+    <li>
+      <button>Next</button>
+    </li>
+  </menu>
+)
+
 export const CustomerSearch = () => {
   const [costumers, setCostumers] = useState([])
 
@@ -27,20 +35,23 @@ export const CustomerSearch = () => {
   }, [])
 
   return (
-    <table>
-      <thead>
-        <tr>
-          <th>First name</th>
-          <th>Last name</th>
-          <th>Phone number</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        {costumers.map(customer => (
-          <CustomerRow key={customer.id} customer={customer} />
-        ))}
-      </tbody>
-    </table>
+    <>
+      <SearchButtons />
+      <table>
+        <thead>
+          <tr>
+            <th>First name</th>
+            <th>Last name</th>
+            <th>Phone number</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {costumers.map(customer => (
+            <CustomerRow key={customer.id} customer={customer} />
+          ))}
+        </tbody>
+      </table>
+    </>
   )
 }
