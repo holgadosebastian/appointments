@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react"
+import React, { useEffect, useState, useCallback } from "react"
 
 const CustomerRow = ({ customer }) => (
   <tr>
@@ -8,16 +8,16 @@ const CustomerRow = ({ customer }) => (
   </tr>
 )
 
-const SearchButtons = () => (
+const SearchButtons = ({ handleNext }) => (
   <menu>
     <li>
-      <button>Next</button>
+      <button onClick={handleNext}>Next</button>
     </li>
   </menu>
 )
 
 export const CustomerSearch = () => {
-  const [costumers, setCostumers] = useState([])
+  const [customers, setCustomers] = useState([])
 
   useEffect(() => {
     const getCustomers = async () => {
@@ -28,15 +28,25 @@ export const CustomerSearch = () => {
       })
 
       const data = await result.json()
-      setCostumers(data)
+      setCustomers(data)
     }
 
     getCustomers()
   }, [])
 
+  const handleNext = useCallback(() => {
+    const after = customers[customers.length - 1].id
+    const url = `/customers?after=${after}`
+    global.fetch(url, {
+      method: "GET",
+      credentials: "same-origin",
+      headers: { "Content-Type": "application/json" },
+    })
+  }, [customers])
+
   return (
     <>
-      <SearchButtons />
+      <SearchButtons handleNext={handleNext} />
       <table>
         <thead>
           <tr>
@@ -47,7 +57,7 @@ export const CustomerSearch = () => {
           </tr>
         </thead>
         <tbody>
-          {costumers.map(customer => (
+          {customers.map(customer => (
             <CustomerRow key={customer.id} customer={customer} />
           ))}
         </tbody>

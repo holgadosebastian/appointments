@@ -1,5 +1,12 @@
 import React from "react"
-import { initializeReactContainer, elements, renderAndWait, textOf, buttonWithLabel } from "./reactTestExtensions"
+import {
+  initializeReactContainer,
+  elements,
+  renderAndWait,
+  textOf,
+  buttonWithLabel,
+  clickAndWait,
+} from "./reactTestExtensions"
 import { fetchResponseOk } from "./builders/fetch"
 import { CustomerSearch } from "../src/components/CustomerSearch"
 
@@ -26,6 +33,8 @@ const twoCustomers = [
     phoneNumber: "2",
   },
 ]
+
+const tenCustomers = Array.from("0123456789", id => ({ id }))
 
 describe("CustomerSearch", () => {
   beforeEach(() => {
@@ -68,5 +77,12 @@ describe("CustomerSearch", () => {
   it("has a next button", async () => {
     await renderAndWait(<CustomerSearch />)
     expect(buttonWithLabel("Next")).not.toBeNull()
+  })
+
+  it("requests next page of data when next button is clicked", async () => {
+    global.fetch.mockResolvedValue(fetchResponseOk(tenCustomers))
+    await renderAndWait(<CustomerSearch />)
+    await clickAndWait(buttonWithLabel("Next"))
+    expect(global.fetch).toHaveBeenLastCalledWith("/customers?after=9", expect.anything())
   })
 })

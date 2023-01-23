@@ -8,7 +8,6 @@ describe("formValidations", () => {
   describe("required", () => {
     it("returns a callback function", () => {
       const result = required("First name is required")
-      console.log("result", result)
       expect(typeof result).toBe("function")
     })
 
