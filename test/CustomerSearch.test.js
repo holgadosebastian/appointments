@@ -12,6 +12,21 @@ const oneCustomer = [
   },
 ]
 
+const twoCustomers = [
+  {
+    id: 1,
+    firstName: "A",
+    lastName: "B",
+    phoneNumber: "1",
+  },
+  {
+    id: 1,
+    firstName: "C",
+    lastName: "D",
+    phoneNumber: "2",
+  },
+]
+
 describe("CustomerSearch", () => {
   beforeEach(() => {
     initializeReactContainer()
@@ -40,5 +55,13 @@ describe("CustomerSearch", () => {
     expect(columns[0]).toContainText("A")
     expect(columns[1]).toContainText("B")
     expect(columns[2]).toContainText("1")
+  })
+
+  it("renders multiple customer rows", async () => {
+    global.fetch.mockResolvedValue(fetchResponseOk(twoCustomers))
+    await renderAndWait(<CustomerSearch />)
+    const rows = elements("table tbody tr")
+    expect(rows[1].childNodes[0]).toContainText("C")
+    expect(rows[1].childNodes[2]).toContainText("2")
   })
 })
