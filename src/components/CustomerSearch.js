@@ -38,7 +38,7 @@ export const CustomerSearch = () => {
       </thead>
       <tbody>
         {costumers.map(customer => (
-          <CustomerRow customer={customer} />
+          <CustomerRow key={customer.id} customer={customer} />
         ))}
       </tbody>
     </table>
