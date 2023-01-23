@@ -21,11 +21,11 @@ const SearchButtons = ({ handleNext, handlePrevious }) => (
 
 export const CustomerSearch = () => {
   const [customers, setCustomers] = useState([])
-  const [queryString, setQueryString] = useState("")
-  const [previousQueryString, setPreviousQueryString] = useState("")
+  const [queryStrings, setQueryStrings] = useState([])
 
   useEffect(() => {
     const getCustomers = async () => {
+      const queryString = queryStrings[queryStrings.length - 1] || ""
       const result = await global.fetch(`/customers${queryString}`, {
         method: "GET",
         credentials: "same-origin",
@@ -37,16 +37,15 @@ export const CustomerSearch = () => {
     }
 
     getCustomers()
-  }, [queryString])
+  }, [queryStrings])
 
   const handleNext = useCallback(async () => {
     const after = customers[customers.length - 1].id
     const newQueryString = `?after=${after}`
-    setPreviousQueryString(queryString)
-    setQueryString(newQueryString)
-  }, [customers, queryString])
+    setQueryStrings([...queryStrings, newQueryString])
+  }, [customers, queryStrings])
 
-  const handlePrevious = useCallback(() => setQueryString(previousQueryString), [previousQueryString])
+  const handlePrevious = useCallback(() => setQueryStrings(queryStrings.slice(0, -1)), [queryStrings])
 
   return (
     <>

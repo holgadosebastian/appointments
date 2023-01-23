@@ -120,4 +120,15 @@ describe("CustomerSearch", () => {
     await clickAndWait(buttonWithLabel("Previous"))
     expect(global.fetch).toHaveBeenLastCalledWith("/customers?after=9", expect.anything())
   })
+
+  it("moves back multiple pages", async () => {
+    global.fetch.mockResolvedValue(fetchResponseOk(tenCustomers))
+
+    await renderAndWait(<CustomerSearch />)
+    await clickAndWait(buttonWithLabel("Next"))
+    await clickAndWait(buttonWithLabel("Next"))
+    await clickAndWait(buttonWithLabel("Previous"))
+    await clickAndWait(buttonWithLabel("Previous"))
+    expect(global.fetch).toHaveBeenLastCalledWith("/customers", expect.anything())
+  })
 })
