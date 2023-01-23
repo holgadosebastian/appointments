@@ -18,10 +18,11 @@ const SearchButtons = ({ handleNext }) => (
 
 export const CustomerSearch = () => {
   const [customers, setCustomers] = useState([])
+  const [queryString, setQueryString] = useState([])
 
   useEffect(() => {
     const getCustomers = async () => {
-      const result = await global.fetch("/customers", {
+      const result = await global.fetch(`/customers${queryString}`, {
         method: "GET",
         credentials: "same-origin",
         headers: { "Content-Type": "application/json" },
@@ -32,19 +33,12 @@ export const CustomerSearch = () => {
     }
 
     getCustomers()
-  }, [])
+  }, [queryString])
 
   const handleNext = useCallback(async () => {
     const after = customers[customers.length - 1].id
-    const url = `/customers?after=${after}`
-    const result = await global.fetch(url, {
-      method: "GET",
-      credentials: "same-origin",
-      headers: { "Content-Type": "application/json" },
-    })
-
-    const data = await result.json()
-    setCustomers(data)
+    const newQueryString = `?after=${after}`
+    setQueryString(newQueryString)
   }, [customers])
 
   return (
