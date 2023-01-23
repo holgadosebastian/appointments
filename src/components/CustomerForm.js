@@ -12,6 +12,7 @@ export const CustomerForm = ({ original, onSave }) => {
   const [error, setError] = useState(false)
   const [validationErrors, setValidationErrors] = useState({})
   const [submitting, setSubmitting] = useState(false)
+  const [isSubmitted, setIsSubmitted] = useState(false)
 
   const validators = {
     firstName: required("First name is required"),
@@ -33,6 +34,7 @@ export const CustomerForm = ({ original, onSave }) => {
     if (result.ok) {
       const customerWithId = await result.json()
       onSave(customerWithId)
+      setIsSubmitted(true)
     } else if (result.status === 422) {
       const response = await result.json()
       setValidationErrors(response.errors)
@@ -147,6 +149,7 @@ export const CustomerForm = ({ original, onSave }) => {
         className="mt-2 block w-full px-2 py-1 bg-teal-500 text-white rounded text-sm cursor-pointer"
         type="submit"
         value="Add"
+        disabled={isSubmitted}
       />
       {submitting && <span className="submittingIndicator">Loading</span>}
     </form>

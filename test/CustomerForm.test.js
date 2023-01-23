@@ -295,4 +295,10 @@ describe("CustomerForm", () => {
       expect(element("span.submittingIndicator")).toBeNull()
     })
   })
+
+  it("disables the submit button when form is submitted", async () => {
+    render(<CustomerForm original={validCustomer} onSave={() => {}} />)
+    await clickAndWait(submitButton())
+    expect(submitButton().disabled).toBe(true)
+  })
 })
