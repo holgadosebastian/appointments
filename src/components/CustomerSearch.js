@@ -18,7 +18,7 @@ const SearchButtons = ({ handleNext }) => (
 
 export const CustomerSearch = () => {
   const [customers, setCustomers] = useState([])
-  const [queryString, setQueryString] = useState([])
+  const [queryString, setQueryString] = useState("")
 
   useEffect(() => {
     const getCustomers = async () => {
