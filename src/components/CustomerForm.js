@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-import { required, match, list, hasError, validateMany, anyErrors } from "../formValidations"
+import { required, match, list, hasError, validateMany, anyErrors } from "../utils/formValidations"
 
 const Error = ({ hasError }) => (
   <p className="text-sm text-red-500" role="alert">
