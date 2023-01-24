@@ -104,6 +104,19 @@ describe("CustomerSearch", () => {
     expect(buttonWithLabel("Previous")).not.toBeNull()
   })
 
+  it("disables previous button when on first page", async () => {
+    await renderAndWait(<CustomerSearch />)
+    expect(buttonWithLabel("Previous").disabled).toEqual(true)
+  })
+
+  it("disables previous button when coming back to first page", async () => {
+    global.fetch.mockResolvedValue(fetchResponseOk(tenCustomers))
+    await renderAndWait(<CustomerSearch />)
+    await clickAndWait(buttonWithLabel("Next"))
+    await clickAndWait(buttonWithLabel("Previous"))
+    expect(buttonWithLabel("Previous").disabled).toEqual(true)
+  })
+
   it("moves back to the first page when previous button is clicked", async () => {
     global.fetch.mockResolvedValue(fetchResponseOk(tenCustomers))
     await renderAndWait(<CustomerSearch />)

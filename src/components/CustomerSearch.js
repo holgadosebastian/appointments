@@ -9,10 +9,12 @@ const CustomerRow = ({ customer, renderCustomerActions }) => (
   </tr>
 )
 
-const SearchButtons = ({ handleNext, handlePrevious }) => (
+const SearchButtons = ({ handleNext, handlePrevious, isFirstPage }) => (
   <menu>
     <li>
-      <button onClick={handlePrevious}>Previous</button>
+      <button onClick={handlePrevious} disabled={isFirstPage}>
+        Previous
+      </button>
     </li>
     <li>
       <button onClick={handleNext}>Next</button>
@@ -67,10 +69,12 @@ export const CustomerSearch = ({ renderCustomerActions }) => {
 
   const handleSearchTextChanged = ({ target: { value } }) => setSearchTerm(value)
 
+  const isFirstPage = lastRowIds.length === 0
+
   return (
     <>
       <input value={searchTerm} onChange={handleSearchTextChanged} placeholder="Enter filter text" />
-      <SearchButtons handleNext={handleNext} handlePrevious={handlePrevious} />
+      <SearchButtons handleNext={handleNext} handlePrevious={handlePrevious} isFirstPage={isFirstPage} />
       <table>
         <thead>
           <tr>
