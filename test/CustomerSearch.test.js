@@ -36,6 +36,7 @@ const twoCustomers = [
   },
 ]
 
+const nineCustomers = Array.from("012345678", id => ({ id }))
 const tenCustomers = Array.from("0123456789", id => ({ id }))
 const anotherTenCustomers = Array.from("ABCDEFGHIJ", id => ({ id }))
 
@@ -80,6 +81,12 @@ describe("CustomerSearch", () => {
   it("has a next button", async () => {
     await renderAndWait(<CustomerSearch />)
     expect(buttonWithLabel("Next")).not.toBeNull()
+  })
+
+  it("disables next button results are less than 10", async () => {
+    global.fetch.mockResolvedValue(fetchResponseOk(nineCustomers))
+    await renderAndWait(<CustomerSearch />)
+    expect(buttonWithLabel("Next").disabled).toEqual(true)
   })
 
   it("requests next page of data when next button is clicked", async () => {
