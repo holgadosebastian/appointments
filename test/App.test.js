@@ -140,5 +140,16 @@ describe("App", () => {
       expect(buttonContainer.firstChild.tagName).toEqual("BUTTON")
       expect(buttonContainer.firstChild).toContainText("Create appointment")
     })
+
+    it("clicking appointment button shows the appointment form for that customer", async () => {
+      const customer = { id: 123 }
+      render(<App />)
+      navigateToSearchCustomers()
+      const buttonContainer = renderAdditional(searchFor(customer))
+      click(buttonContainer.firstChild)
+
+      expect(element("#AppointmentFormLoader")).not.toBeNull()
+      expect(propsOf(AppointmentFormLoader).original).toMatchObject({ customer: 123 })
+    })
   })
 })

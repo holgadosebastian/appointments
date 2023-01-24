@@ -18,7 +18,9 @@ export const App = () => {
     setView("addAppointment")
   }, [])
 
-  const searchActions = () => <button>Create appointment</button>
+  const searchActions = customer => (
+    <button onClick={() => transitionToAddAppointment(customer)}>Create appointment</button>
+  )
 
   const Content = () => {
     switch (view) {
