@@ -13,6 +13,12 @@ export const initializeReactContainer = () => {
 
 export const render = component => act(() => reactRoot.render(component))
 
+export const renderAdditional = component => {
+  const container = document.createElement("div")
+  act(() => ReactDOM.createRoot(container).render(component))
+  return container
+}
+
 export const click = element => act(() => element.click())
 
 export const element = selector => document.querySelector(selector)
