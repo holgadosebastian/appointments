@@ -1,10 +1,11 @@
 import React, { useEffect, useState, useCallback } from "react"
 
-const CustomerRow = ({ customer }) => (
+const CustomerRow = ({ customer, renderCustomerActions }) => (
   <tr>
     <td>{customer.firstName}</td>
     <td>{customer.lastName}</td>
     <td>{customer.phoneNumber}</td>
+    <td>{renderCustomerActions(customer)}</td>
   </tr>
 )
 
@@ -34,7 +35,7 @@ const searchParams = (after, searchTerm) => {
   return ""
 }
 
-export const CustomerSearch = () => {
+export const CustomerSearch = ({ renderCustomerActions }) => {
   const [customers, setCustomers] = useState([])
   const [lastRowIds, setLastRowIds] = useState([])
   const [searchTerm, setSearchTerm] = useState("")
@@ -81,10 +82,14 @@ export const CustomerSearch = () => {
         </thead>
         <tbody>
           {customers.map(customer => (
-            <CustomerRow key={customer.id} customer={customer} />
+            <CustomerRow key={customer.id} customer={customer} renderCustomerActions={renderCustomerActions} />
           ))}
         </tbody>
       </table>
     </>
   )
+}
+
+CustomerSearch.defaultProps = {
+  renderCustomerActions: () => {},
 }
