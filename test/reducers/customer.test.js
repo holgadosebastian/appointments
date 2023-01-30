@@ -24,7 +24,7 @@ describe("customer reducer", () => {
     })
   })
 
-  describe("ADD_CUSTOMER_SUCCESSFUL_ACTION", () => {
+  describe("ADD_CUSTOMER_SUCCESSFUL action", () => {
     const customer = { id: 123 }
     const action = {
       type: "ADD_CUSTOMER_SUCCESSFUL",
@@ -40,6 +40,12 @@ describe("customer reducer", () => {
     it("mantains existing state", () => {
       expect(reducer({ a: 123 }, action)).toMatchObject({
         a: 123,
+      })
+    })
+
+    it("sets customer to provided customer", () => {
+      expect(reducer(undefined, action)).toMatchObject({
+        customer,
       })
     })
   })
