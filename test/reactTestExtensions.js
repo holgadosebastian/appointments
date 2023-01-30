@@ -1,5 +1,8 @@
+import React from "react"
 import ReactDOM from "react-dom/client"
-import { act, mockComponent } from "react-dom/test-utils"
+import { act } from "react-dom/test-utils"
+import { createMemoryHistory } from "history"
+import { unstable_HistoryRouter as HistoryRouter } from "react-router-dom"
 
 export let container
 let reactRoot
@@ -87,3 +90,12 @@ export const withFocus = (target, fn) =>
   })
 
 export const buttonWithLabel = label => elements("button").find(({ textContent }) => textContent === label)
+
+export const linkFor = href => elements("a").find(el => el.getAttribute("href") === href)
+
+export let history
+export const renderWithRouter = (component, { location } = { location: "" }) => {
+  history = createMemoryHistory({ initialEntries: [location] })
+
+  act(() => reactRoot.render(<HistoryRouter history={history}>{component}</HistoryRouter>))
+}

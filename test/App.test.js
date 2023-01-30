@@ -1,6 +1,14 @@
 import React from "react"
 import { act } from "react-dom/test-utils"
-import { initializeReactContainer, render, renderAdditional, element, click, propsOf } from "./reactTestExtensions"
+import {
+  initializeReactContainer,
+  renderAdditional,
+  element,
+  click,
+  propsOf,
+  renderWithRouter,
+  linkFor,
+} from "./reactTestExtensions"
 import { blankCustomer } from "./builders/customer"
 import { blankAppointment } from "./builders/appointment"
 import { App } from "../src/App"
@@ -26,7 +34,7 @@ jest.mock("../src/components/CustomerSearch", () => ({
 }))
 
 describe("App", () => {
-  const beginAddingCustomerAndAppointment = () => click(element("menu > li > button:first-of-type"))
+  const beginAddingCustomerAndAppointment = () => click(linkFor("/addCustomer"))
   const exampleCustomer = { id: "123" }
   const saveCustomer = (customer = exampleCustomer) => act(() => propsOf(CustomerForm).onSave(customer))
   const saveAppointment = () => act(() => propsOf(AppointmentFormLoader).onSave())
@@ -35,34 +43,27 @@ describe("App", () => {
     initializeReactContainer()
   })
 
-  it("initially renders AppointmentsDayViewLoader", () => {
-    render(<App />)
+  it("initially shows the AppointmentsDayViewLoader", () => {
+    renderWithRouter(<App />)
 
     expect(AppointmentsDayViewLoader).toBeRenderedWithProps({})
   })
 
   it("has a menu bar", () => {
-    render(<App />)
+    renderWithRouter(<App />)
 
     expect(element("menu")).not.toBeNull()
   })
 
-  it("has a button to initiate add customer and appointment action", () => {
-    render(<App />)
-    const firstButton = element("menu > li > button:first-of-type")
-
-    expect(firstButton).toContainText("Add customer and appointment")
-  })
-
   describe("when customer and appointment button is clicked", () => {
     it("displays the CustomerForm", () => {
-      render(<App />)
+      renderWithRouter(<App />)
       beginAddingCustomerAndAppointment()
       expect(CustomerForm).toBeRenderedWithProps(expect.anything())
     })
 
     it("passes a blank original customer object to CustomerForm", async () => {
-      render(<App />)
+      renderWithRouter(<App />)
       beginAddingCustomerAndAppointment()
       expect(CustomerForm).toBeRenderedWithProps(
         expect.objectContaining({
@@ -72,14 +73,14 @@ describe("App", () => {
     })
 
     it("hides the AppointmentsDayViewLoader when CustomerForm is being displayed", async () => {
-      render(<App />)
+      renderWithRouter(<App />)
       beginAddingCustomerAndAppointment()
       expect(element("menu")).toBeNull()
     })
   })
 
   it("displayes the AppointmentFormLoader after the CustomerForm is submitted", async () => {
-    render(<App />)
+    renderWithRouter(<App />)
     beginAddingCustomerAndAppointment()
     saveCustomer()
 
@@ -87,7 +88,7 @@ describe("App", () => {
   })
 
   it("passes a blank original appointment object to Customer", async () => {
-    render(<App />)
+    renderWithRouter(<App />)
     beginAddingCustomerAndAppointment()
     saveCustomer()
 
@@ -101,7 +102,7 @@ describe("App", () => {
   it("passes the customer to the AppointmentForm", async () => {
     const customer = { id: 123 }
 
-    render(<App />)
+    renderWithRouter(<App />)
     beginAddingCustomerAndAppointment()
     saveCustomer(customer)
 
@@ -115,7 +116,7 @@ describe("App", () => {
   })
 
   it("renders AppointmentDayViewLoader after AppointmentForm is submitted", async () => {
-    render(<App />)
+    renderWithRouter(<App />)
     beginAddingCustomerAndAppointment()
     saveCustomer()
     saveAppointment()
@@ -125,16 +126,15 @@ describe("App", () => {
 
   describe("search customers", () => {
     it("has a button to search customers", () => {
-      render(<App />)
-      const secondButton = element("menu > li:nth-of-type(2) > button")
-      expect(secondButton).toContainText("Search customers")
+      renderWithRouter(<App />)
+      expect(linkFor("/searchCustomers")).not.toBeNull()
     })
 
     const searchFor = customer => propsOf(CustomerSearch).renderCustomerActions(customer)
-    const navigateToSearchCustomers = () => click(element("menu > li:nth-of-type(2) > button"))
+    const navigateToSearchCustomers = () => click(linkFor("/searchCustomers"))
 
     it("passes a button to the CustomerSearch named Create appointment", async () => {
-      render(<App />)
+      renderWithRouter(<App />)
       navigateToSearchCustomers()
       const buttonContainer = renderAdditional(searchFor())
       expect(buttonContainer.firstChild.tagName).toEqual("BUTTON")
@@ -143,7 +143,7 @@ describe("App", () => {
 
     it("clicking appointment button shows the appointment form for that customer", async () => {
       const customer = { id: 123 }
-      render(<App />)
+      renderWithRouter(<App />)
       navigateToSearchCustomers()
       const buttonContainer = renderAdditional(searchFor(customer))
       click(buttonContainer.firstChild)
