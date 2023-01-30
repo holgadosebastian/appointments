@@ -49,4 +49,20 @@ describe("customer reducer", () => {
       })
     })
   })
+
+  describe("ADD_CUSTOMER_FAILED action", () => {
+    const action = { type: "ADD_CUSTOMER_FAILED" }
+
+    it("sets status to FAILED", () => {
+      expect(reducer(undefined, action)).toMatchObject({
+        status: "FAILED",
+      })
+    })
+
+    it("sets error to true", () => {
+      expect(reducer(undefined, action)).toMatchObject({
+        error: true,
+      })
+    })
+  })
 })

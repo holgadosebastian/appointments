@@ -11,6 +11,8 @@ export const reducer = (state = defaultState, action) => {
       return { ...state, status: "SUBMITTING" }
     case "ADD_CUSTOMER_SUCCESSFUL":
       return { ...state, customer: action.customer, status: "SUCCESSFUL" }
+    case "ADD_CUSTOMER_FAILED":
+      return { ...state, status: "FAILED", error: true }
     default:
       return state
   }
