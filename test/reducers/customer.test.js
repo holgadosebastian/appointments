@@ -1,4 +1,5 @@
 import { reducer } from "../../src/reducers/customer"
+import { itMaintainsExistingState, itSetsStatus } from "../reducerGenerators"
 
 describe("customer reducer", () => {
   it("returns a default state for an unefined existing state", () => {
@@ -13,15 +14,9 @@ describe("customer reducer", () => {
   describe("ADD_CUSTOMER_SUBMITTING action", () => {
     const action = { type: "ADD_CUSTOMER_SUBMITTING" }
 
-    it("sets status to SUBMITTING", () => {
-      expect(reducer(undefined, action)).toMatchObject({
-        status: "SUBMITTING",
-      })
-    })
+    itSetsStatus(reducer, action, "SUBMITTING")
 
-    it("mantains existing state", () => {
-      expect(reducer({ a: 123 }, action)).toMatchObject({ a: 123 })
-    })
+    itMaintainsExistingState(reducer, action)
   })
 
   describe("ADD_CUSTOMER_SUCCESSFUL action", () => {
@@ -31,17 +26,9 @@ describe("customer reducer", () => {
       customer,
     }
 
-    it("sets status to SUCCESSFUL", () => {
-      expect(reducer(undefined, action)).toMatchObject({
-        status: "SUCCESSFUL",
-      })
-    })
+    itSetsStatus(reducer, action, "SUCCESSFUL")
 
-    it("mantains existing state", () => {
-      expect(reducer({ a: 123 }, action)).toMatchObject({
-        a: 123,
-      })
-    })
+    itMaintainsExistingState(reducer, action)
 
     it("sets customer to provided customer", () => {
       expect(reducer(undefined, action)).toMatchObject({
@@ -53,16 +40,30 @@ describe("customer reducer", () => {
   describe("ADD_CUSTOMER_FAILED action", () => {
     const action = { type: "ADD_CUSTOMER_FAILED" }
 
-    it("sets status to FAILED", () => {
-      expect(reducer(undefined, action)).toMatchObject({
-        status: "FAILED",
-      })
-    })
+    itSetsStatus(reducer, action, "FAILED")
 
     it("sets error to true", () => {
       expect(reducer(undefined, action)).toMatchObject({
         error: true,
       })
+    })
+
+    itMaintainsExistingState(reducer, action)
+  })
+
+  describe("ADD_CUSTOMER_FAILED action", () => {
+    const validationErrors = { field: "error text" }
+    const action = {
+      type: "ADD_CUSTOMER_VALIDATION_FAILED",
+      validationErrors,
+    }
+
+    itSetsStatus(reducer, action, "VALIDATION_FAILED")
+
+    itMaintainsExistingState(reducer, action)
+
+    it("sets validation errors to provided errors", () => {
+      expect(reducer(undefined, action)).toMatchObject({ validationErrors })
     })
   })
 })
