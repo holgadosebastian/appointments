@@ -8,7 +8,9 @@ const defaultState = {
 export const reducer = (state = defaultState, action) => {
   switch (action.type) {
     case "ADD_CUSTOMER_SUBMITTING":
-      return { status: "SUBMITTING" }
+      return { ...state, status: "SUBMITTING" }
+    case "ADD_CUSTOMER_SUCCESSFUL":
+      return { ...state, status: "SUCCESSFUL" }
     default:
       return state
   }

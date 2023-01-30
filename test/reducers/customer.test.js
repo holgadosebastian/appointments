@@ -18,5 +18,29 @@ describe("customer reducer", () => {
         status: "SUBMITTING",
       })
     })
+
+    it("mantains existing state", () => {
+      expect(reducer({ a: 123 }, action)).toMatchObject({ a: 123 })
+    })
+  })
+
+  describe("ADD_CUSTOMER_SUCCESSFUL_ACTION", () => {
+    const customer = { id: 123 }
+    const action = {
+      type: "ADD_CUSTOMER_SUCCESSFUL",
+      customer,
+    }
+
+    it("sets status to SUCCESSFUL", () => {
+      expect(reducer(undefined, action)).toMatchObject({
+        status: "SUCCESSFUL",
+      })
+    })
+
+    it("mantains existing state", () => {
+      expect(reducer({ a: 123 }, action)).toMatchObject({
+        a: 123,
+      })
+    })
   })
 })
