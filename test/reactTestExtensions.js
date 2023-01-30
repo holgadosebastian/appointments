@@ -3,11 +3,17 @@ import ReactDOM from "react-dom/client"
 import { act } from "react-dom/test-utils"
 import { createMemoryHistory } from "history"
 import { unstable_HistoryRouter as HistoryRouter } from "react-router-dom"
+import { Provider } from "react-redux"
+import { storeSpy } from "expect-redux"
+import { configureStore } from "../src/store"
 
 export let container
+export let history
+export let store
 let reactRoot
 
 export const initializeReactContainer = () => {
+  store = configureStore([storeSpy])
   container = document.createElement("div")
   document.body.replaceChildren(container)
 
@@ -93,9 +99,12 @@ export const buttonWithLabel = label => elements("button").find(({ textContent }
 
 export const linkFor = href => elements("a").find(el => el.getAttribute("href") === href)
 
-export let history
 export const renderWithRouter = (component, { location } = { location: "" }) => {
   history = createMemoryHistory({ initialEntries: [location] })
 
   act(() => reactRoot.render(<HistoryRouter history={history}>{component}</HistoryRouter>))
 }
+
+export const renderWithStore = component => act(() => reactRoot.render(<Provider store={store}>{component}</Provider>))
+
+export const dispatchToStore = action => act(() => store.dispatch(action))
