@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-import { useDispatch } from "react-redux"
+import { useDispatch, useSelector } from "react-redux"
 import { required, match, list, hasError, validateMany, anyErrors } from "../utils/formValidations"
 
 const Error = ({ hasError }) => (
@@ -15,11 +15,12 @@ const addCustomerRequest = customer => ({
 
 export const CustomerForm = ({ original, onSave }) => {
   const dispatch = useDispatch()
+  const { error, status, validationErrors: serverValidationErrors } = useSelector(({ customer }) => customer)
   const [customer, setCustomer] = useState(original)
-  const [error, setError] = useState(false)
   const [validationErrors, setValidationErrors] = useState({})
-  const [submitting, setSubmitting] = useState(false)
-  const [isSubmitted, setIsSubmitted] = useState(false)
+
+  const submitting = status === "SUBMITTING"
+  const isSubmitted = status === "SUCCESSFUL"
 
   const validators = {
     firstName: required("First name is required"),
@@ -41,20 +42,14 @@ export const CustomerForm = ({ original, onSave }) => {
     if (result.ok) {
       const customerWithId = await result.json()
       onSave(customerWithId)
-      setIsSubmitted(true)
     } else if (result.status === 422) {
       const response = await result.json()
       setValidationErrors(response.errors)
-    } else {
-      setError(true)
     }
   }
 
   const handleSubmit = async event => {
     event.preventDefault()
-
-    setSubmitting(true)
-    setError(false)
 
     const validationResult = validateMany(validators, customer)
     if (!anyErrors(validationResult)) {
@@ -63,8 +58,6 @@ export const CustomerForm = ({ original, onSave }) => {
     } else {
       setValidationErrors(validationResult)
     }
-
-    setSubmitting(false)
   }
 
   const validateField = (name, value) => {
@@ -91,9 +84,13 @@ export const CustomerForm = ({ original, onSave }) => {
   }
 
   const renderError = fieldName => {
-    return hasError(validationErrors, fieldName) ? (
+    const allValidationErrors = {
+      ...validationErrors,
+      ...serverValidationErrors,
+    }
+    return hasError(allValidationErrors, fieldName) ? (
       <p className="mt-2 text-sm text-red-500" id={`${fieldName}Error`} role="alert">
-        {validationErrors[fieldName]}
+        {allValidationErrors[fieldName]}
       </p>
     ) : null
   }
