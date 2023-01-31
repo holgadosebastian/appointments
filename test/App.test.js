@@ -10,7 +10,6 @@ import {
   linkFor,
 } from "./reactTestExtensions"
 import { blankCustomer } from "./builders/customer"
-import { blankAppointment } from "./builders/appointment"
 import { App } from "../src/App"
 import { AppointmentsDayViewLoader } from "../src/components/AppointmentsDayViewLoader"
 import { AppointmentFormLoader } from "../src/components/AppointmentFormLoader"
@@ -35,9 +34,6 @@ jest.mock("../src/components/CustomerSearch", () => ({
 
 describe("App", () => {
   const beginAddingCustomerAndAppointment = () => click(linkFor("/addCustomer"))
-  const exampleCustomer = { id: "123" }
-  const saveCustomer = (customer = exampleCustomer) => act(() => propsOf(CustomerForm).onSave(customer))
-  const saveAppointment = () => act(() => propsOf(AppointmentFormLoader).onSave())
 
   beforeEach(() => {
     initializeReactContainer()
@@ -77,51 +73,6 @@ describe("App", () => {
       beginAddingCustomerAndAppointment()
       expect(element("menu")).toBeNull()
     })
-  })
-
-  it("displayes the AppointmentFormLoader after the CustomerForm is submitted", async () => {
-    renderWithRouter(<App />)
-    beginAddingCustomerAndAppointment()
-    saveCustomer()
-
-    expect(element("#AppointmentFormLoader")).not.toBeNull()
-  })
-
-  it("passes a blank original appointment object to Customer", async () => {
-    renderWithRouter(<App />)
-    beginAddingCustomerAndAppointment()
-    saveCustomer()
-
-    expect(AppointmentFormLoader).toBeRenderedWithProps(
-      expect.objectContaining({
-        original: expect.objectContaining(blankAppointment),
-      })
-    )
-  })
-
-  it("passes the customer to the AppointmentForm", async () => {
-    const customer = { id: 123 }
-
-    renderWithRouter(<App />)
-    beginAddingCustomerAndAppointment()
-    saveCustomer(customer)
-
-    expect(AppointmentFormLoader).toBeRenderedWithProps(
-      expect.objectContaining({
-        original: expect.objectContaining({
-          customer: customer.id,
-        }),
-      })
-    )
-  })
-
-  it("renders AppointmentDayViewLoader after AppointmentForm is submitted", async () => {
-    renderWithRouter(<App />)
-    beginAddingCustomerAndAppointment()
-    saveCustomer()
-    saveAppointment()
-
-    expect(element("#AppointmentsDayViewLoader")).not.toBeNull()
   })
 
   describe("search customers", () => {

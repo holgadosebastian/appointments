@@ -12,7 +12,6 @@ import {
   submitButton,
   change,
   labelFor,
-  click,
   clickAndWait,
   submitAndWait,
   withFocus,
@@ -23,7 +22,6 @@ import { bodyOfLastFetchRequest } from "./spyHelpers"
 import { fetchResponseOk, fetchResponseError } from "./builders/fetch"
 import { blankCustomer, validCustomer } from "./builders/customer"
 import { CustomerForm } from "../src/components/CustomerForm"
-import { blankAppointment } from "./builders/appointment"
 
 describe("CustomerForm", () => {
   const errorFor = fieldName => element(`#${fieldName}Error[role=alert]`)
@@ -143,31 +141,6 @@ describe("CustomerForm", () => {
     })
   })
 
-  it("calls fetch with the right configuration", async () => {
-    renderWithStore(<CustomerForm original={validCustomer} />)
-    clickAndWait(submitButton())
-    expect(global.fetch).toBeCalledWith(
-      expect.anything(),
-      expect.objectContaining({
-        credentials: "same-origin",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      })
-    )
-  })
-
-  it("notifies onSave when form is submitted", async () => {
-    const customer = { id: 123 }
-    global.fetch.mockResolvedValue(fetchResponseOk(customer))
-    const saveSpy = jest.fn()
-
-    renderWithStore(<CustomerForm original={validCustomer} onSave={saveSpy} />)
-    await clickAndWait(submitButton())
-
-    expect(saveSpy).toBeCalledWith(customer)
-  })
-
   it("renders an alert space", () => {
     renderWithStore(<CustomerForm original={blankCustomer} />)
     expect(element("[role=alert]")).not.toBeNull()
@@ -179,19 +152,6 @@ describe("CustomerForm", () => {
   })
 
   describe("when POST request returns an error", () => {
-    beforeEach(() => {
-      global.fetch.mockResolvedValue(fetchResponseError())
-    })
-
-    it("does not notify onSave ", async () => {
-      const saveSpy = jest.fn()
-
-      renderWithStore(<CustomerForm original={validCustomer} onSave={saveSpy} />)
-      await clickAndWait(submitButton())
-
-      expect(saveSpy).not.toBeCalled()
-    })
-
     it("renders an error message when error prop is true", async () => {
       renderWithStore(<CustomerForm original={validCustomer} />)
       dispatchToStore({ type: "ADD_CUSTOMER_FAILED" })

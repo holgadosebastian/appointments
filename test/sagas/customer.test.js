@@ -1,6 +1,7 @@
 import { storeSpy, expectRedux } from "expect-redux"
 import { fetchResponseOk, fetchResponseError } from "../builders/fetch"
 import { configureStore } from "../../src/store"
+import { appHistory } from "../../src/history"
 
 describe("addCustomer", () => {
   let store
@@ -91,5 +92,15 @@ describe("addCustomer", () => {
       type: "ADD_CUSTOMER_VALIDATION_FAILED",
       validationErrors: errors,
     })
+  })
+
+  it("navigates to /addAppointment on success", () => {
+    store.dispatch(addCustomerRequest())
+    expect(appHistory.location.pathname).toEqual("/addAppointment")
+  })
+
+  it("includes the customer id in the query string when navigation to /addAppointment", () => {
+    store.dispatch(addCustomerRequest())
+    expect(appHistory.location.search).toEqual("?customer=123")
   })
 })

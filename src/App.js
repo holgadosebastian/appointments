@@ -17,15 +17,7 @@ export const App = () => {
   return (
     <div className="container mx-auto">
       <Routes>
-        <Route
-          path="/addCustomer"
-          element={
-            <CustomerForm
-              original={blankCustomer}
-              onSave={customer => navigate(`/addAppointment?customerId=${customer.id}`)}
-            />
-          }
-        />
+        <Route path="/addCustomer" element={<CustomerForm original={blankCustomer} />} />
         <Route
           path="/addAppointment"
           element={<AppointmentFormRoute original={{ ...blankAppointment }} onSave={transitionToDayView} />}
