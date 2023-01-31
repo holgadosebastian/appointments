@@ -1,4 +1,5 @@
 import React, { useState } from "react"
+import { useDispatch } from "react-redux"
 import { required, match, list, hasError, validateMany, anyErrors } from "../utils/formValidations"
 
 const Error = ({ hasError }) => (
@@ -7,7 +8,13 @@ const Error = ({ hasError }) => (
   </p>
 )
 
+const addCustomerRequest = customer => ({
+  type: "ADD_CUSTOMER_REQUEST",
+  customer,
+})
+
 export const CustomerForm = ({ original, onSave }) => {
+  const dispatch = useDispatch()
   const [customer, setCustomer] = useState(original)
   const [error, setError] = useState(false)
   const [validationErrors, setValidationErrors] = useState({})
@@ -52,6 +59,7 @@ export const CustomerForm = ({ original, onSave }) => {
     const validationResult = validateMany(validators, customer)
     if (!anyErrors(validationResult)) {
       await doSave()
+      dispatch(addCustomerRequest(customer))
     } else {
       setValidationErrors(validationResult)
     }
@@ -154,4 +162,8 @@ export const CustomerForm = ({ original, onSave }) => {
       {submitting && <span className="submittingIndicator">Loading</span>}
     </form>
   )
+}
+
+CustomerForm.defaultProps = {
+  onSave: () => {},
 }
