@@ -5,6 +5,7 @@ describe("addCustomer", () => {
   let store
 
   beforeEach(() => {
+    jest.spyOn(global, "fetch")
     store = configureStore([storeSpy])
   })
 
@@ -17,5 +18,17 @@ describe("addCustomer", () => {
     store.dispatch(addCustomerRequest())
 
     return expectRedux(store).toDispatchAnAction().matching({ type: "ADD_CUSTOMER_SUBMITTING" })
+  })
+
+  it("sends HTTP request to POST /customers", async () => {
+    const inputCustomer = { firstName: "Ashley" }
+    store.dispatch(addCustomerRequest(inputCustomer))
+
+    expect(global.fetch).toBeCalledWith(
+      "/customers",
+      expect.objectContaining({
+        method: "POST",
+      })
+    )
   })
 })
