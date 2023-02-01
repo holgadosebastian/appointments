@@ -56,6 +56,7 @@
     "setupFilesAfterEnv": [
       "./test/domMatchers.js"
     ],
+    "clearMocks": true,
     "restoreMocks": true
   }
 }

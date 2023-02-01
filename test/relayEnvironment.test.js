@@ -1,5 +1,5 @@
 import { fetchResponseOk, fetchResponseError } from "./builders/fetch"
-import { performFetch, buildEnvironment } from "../src/relayEnvironment"
+import { performFetch, buildEnvironment, getEnvironment } from "../src/relayEnvironment"
 import { Environment, Network, Store, RecordSource } from "relay-runtime"
 jest.mock("relay-runtime")
 
@@ -75,6 +75,7 @@ describe("buildEnvironment", () => {
   })
 
   it("calls environment with network and store", () => {
+    buildEnvironment()
     expect(Environment).toBeCalledWith({
       network,
       store,
@@ -82,10 +83,20 @@ describe("buildEnvironment", () => {
   })
 
   it("calls Network.create with performFetch", () => {
+    buildEnvironment()
     expect(Network.create).toBeCalledWith(performFetch)
   })
 
   it("calls Store with RecordSource", () => {
+    buildEnvironment()
     expect(Store).toBeCalledWith(recordSource)
+  })
+})
+
+describe("getEnvironment", () => {
+  it("constructs the object only once", () => {
+    getEnvironment()
+    getEnvironment()
+    expect(Environment.mock.calls.length).toEqual(1)
   })
 })

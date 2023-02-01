@@ -24,3 +24,6 @@ export const performFetch = (operation, variables) =>
 
 export const buildEnvironment = () =>
   new Environment({ network: Network.create(performFetch), store: new Store(new RecordSource()) })
+
+let environment = null
+export const getEnvironment = () => environment || (environment = buildEnvironment())
