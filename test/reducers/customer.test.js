@@ -35,6 +35,12 @@ describe("customer reducer", () => {
         customer,
       })
     })
+
+    it("should set error to false after", () => {
+      expect(reducer({ error: true }, action)).toMatchObject({
+        error: false,
+      })
+    })
   })
 
   describe("ADD_CUSTOMER_FAILED action", () => {
