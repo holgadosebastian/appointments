@@ -1,3 +1,5 @@
+import { Environment, Network, Store, RecordSource } from "relay-runtime"
+
 const verifyStatusOk = result => {
   if (!result.ok) {
     return Promise.reject(new Error(500))
@@ -19,3 +21,6 @@ export const performFetch = (operation, variables) =>
     })
     .then(verifyStatusOk)
     .then(result => result.json())
+
+export const buildEnvironment = () =>
+  new Environment({ network: Network.create(performFetch), store: new Store(new RecordSource()) })

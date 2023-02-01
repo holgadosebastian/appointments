@@ -1,5 +1,7 @@
 import { fetchResponseOk, fetchResponseError } from "./builders/fetch"
-import { performFetch } from "../src/relayEnvironment"
+import { performFetch, buildEnvironment } from "../src/relayEnvironment"
+import { Environment, Network, Store, RecordSource } from "relay-runtime"
+jest.mock("relay-runtime")
 
 describe("performFetch", () => {
   let response = { data: { id: 123 } }
@@ -52,5 +54,38 @@ describe("performFetch", () => {
   it("rejects when the request fails", () => {
     global.fetch.mockResolvedValue(fetchResponseError(500))
     return expect(performFetch({ text }, variables)).rejects.toEqual(new Error(500))
+  })
+})
+
+describe("buildEnvironment", () => {
+  const environment = { a: 123 }
+  const network = { b: 234 }
+  const store = { c: 345 }
+  const recordSource = { d: 456 }
+
+  beforeEach(() => {
+    Environment.mockImplementation(() => environment)
+    Network.create.mockReturnValue(network)
+    Store.mockImplementation(() => store)
+    RecordSource.mockImplementation(() => recordSource)
+  })
+
+  it("returns environment", () => {
+    expect(buildEnvironment()).toEqual(environment)
+  })
+
+  it("calls environment with network and store", () => {
+    expect(Environment).toBeCalledWith({
+      network,
+      store,
+    })
+  })
+
+  it("calls Network.create with performFetch", () => {
+    expect(Network.create).toBeCalledWith(performFetch)
+  })
+
+  it("calls Store with RecordSource", () => {
+    expect(Store).toBeCalledWith(recordSource)
   })
 })
